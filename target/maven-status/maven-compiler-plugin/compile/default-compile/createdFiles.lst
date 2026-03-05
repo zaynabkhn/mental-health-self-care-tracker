@@ -1,0 +1,6 @@
+com\mhtracker\controller\HabitsController.class
+com\mhtracker\controller\LoginController.class
+com\mhtracker\model\User.class
+com\mhtracker\model\Habit.class
+com\mhtracker\MainApp.class
+com\mhtracker\model\HabitType.class
