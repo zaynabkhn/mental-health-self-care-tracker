@@ -7,7 +7,7 @@ import java.sql.Statement;
 
 public class Database {
 
-    private static final String URL = "jdbc:sqlite:moodtracker.db";
+    private static final String URL = "jdbc:sqlite:sqlite.db";
 
     public static Connection getConnection() throws SQLException {
         return DriverManager.getConnection(URL);
@@ -25,8 +25,14 @@ public class Database {
 
         try (Connection conn = getConnection(); Statement stmt = conn.createStatement())
         {
-            System.out.println("Connected to SQLite successfully.");
+            System.out.println("Connected to: " + conn.getMetaData().getURL());
             stmt.execute(sqlUsers);
+            stmt.execute("""
+                INSERT OR IGNORE INTO users (username, password)
+                VALUES ('admin', 'password');
+            """);
+
+            System.out.println("Database initialized.");
         } 
         catch (SQLException e) 
         {

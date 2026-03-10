@@ -1,6 +1,8 @@
 package com.mhtracker.controller;
 
 import com.mhtracker.model.User;
+import com.mhtracker.model.UserDAO;
+
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -21,15 +23,13 @@ public class LoginController {
     @FXML
     private Label messageLabel;
 
-    private User demoUser = new User("admin", "password");
-
     @FXML
     private void handleLogin() {
 
         String username = usernameField.getText();
         String password = passwordField.getText();
 
-        if (demoUser.authenticate(username, password)) {
+        if (UserDAO.authenticate(username, password)) {
 
             try {
                 FXMLLoader loader = new FXMLLoader(
