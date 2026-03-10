@@ -39,4 +39,6 @@
             prefWidth="220"
             prefHeight="42"
             styleClass="danger-button"/>
+    <Button text="Open Mood Tracker" onAction="#handleOpenMoodTracker"/>
+
 </VBox>
