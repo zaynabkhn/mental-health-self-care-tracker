@@ -1,14 +1,22 @@
 package com.mhtracker;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+
+import com.mhtracker.model.Database;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-public class MainApp extends Application {
+public class MainApp extends Application 
+{
 
     @Override
-    public void start(Stage stage) throws Exception {
+    public void start(Stage stage) throws Exception 
+    {
+        // Initialize database BEFORE loading UI
+        Database.initialize();
 
         FXMLLoader loader = new FXMLLoader(
                 getClass().getResource("/com/mhtracker/view/LoginView.fxml")
@@ -27,7 +35,8 @@ public class MainApp extends Application {
         stage.show();
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) 
+    {
         launch();
     }
 }
