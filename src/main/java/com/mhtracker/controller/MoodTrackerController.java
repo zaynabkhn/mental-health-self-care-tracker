@@ -6,9 +6,49 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.TextArea;
 import javafx.stage.Stage;
 
-public class MoodTrackerController {
+public class MoodTrackerController 
+{
+    @FXML
+    private ComboBox<String> moodComboBox;
+
+    @FXML
+    private TextArea notesArea;
+
+    @FXML
+    public void initialize() 
+    {
+        moodComboBox.getItems().addAll(
+                "Happy",
+                "Sad",
+                "Anxious",
+                "Stressed",
+                "Calm",
+                "Angry",
+                "Tired",
+                "Excited"
+        );
+    }
+
+    @FXML
+    private void handleSave(Event event) 
+    {
+        String mood = moodComboBox.getValue();
+        String notes = notesArea.getText();
+
+        if (mood == null) 
+        {
+            System.out.println("Please select a mood.");
+            return;
+        }
+
+        System.out.println("Saving mood: " + mood + ", Notes: " + notes);
+
+        // Later: call MoodEntryDAO.insert(...)
+    }
 
     @FXML
     private void handleBack(Event event) {

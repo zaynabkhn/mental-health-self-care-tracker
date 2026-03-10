@@ -3,12 +3,21 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox spacing="20" alignment="CENTER"
+<VBox spacing="15" alignment="CENTER"
       xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.mhtracker.controller.MoodTrackerController">
 
-    <Label text="Mood Tracker"/>
-    <Label text="Track your mood here."/>
+    <Label text="Mood Tracker" style="-fx-font-size: 18px;"/>
+
+    <HBox spacing="10" alignment="CENTER">
+        <Label text="Select your mood:"/>
+        <ComboBox fx:id="moodComboBox" prefWidth="150"/>
+    </HBox>
+
+    <Label text="Notes:"/>
+    <TextArea fx:id="notesArea" prefRowCount="4" prefWidth="250"/>
+
+    <Button text="Save Entry" onAction="#handleSave"/>
 
     <Button text="Back to Dashboard" onAction="#handleBack"/>
 
