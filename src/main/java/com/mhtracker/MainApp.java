@@ -1,9 +1,7 @@
 package com.mhtracker;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-
 import com.mhtracker.model.Database;
+
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
