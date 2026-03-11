@@ -54,6 +54,11 @@ public class MoodEntry
     }
 
     // Setters
+    public void setUsername(String username) 
+    {
+        this.username = username;
+    }
+
     public void setMood(String mood) 
     {
         this.mood = mood;

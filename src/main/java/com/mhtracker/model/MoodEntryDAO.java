@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -46,14 +47,17 @@ public class MoodEntryDAO
 
             while (rs.next()) 
             {
-                MoodEntry entry = new MoodEntry(
-                        username,
-                        rs.getString("mood"),
-                        rs.getString("note")
-                );
+                String mood = rs.getString("mood");
+                String note = rs.getString("note");
+                String ts = rs.getString("timestamp").trim();
 
-                // Override timestamp with DB value
-                entry.setTimestamp(rs.getString("timestamp"));
+                LocalDateTime parsed = LocalDateTime.parse(ts, MoodEntry.DB_FORMAT);
+
+                // Uses the correct constructor hopefully.
+                MoodEntry entry = new MoodEntry(mood, note, parsed);
+
+                // Set username manually
+                entry.setUsername(username);
 
                 entries.add(entry);
             }
@@ -73,18 +77,21 @@ public class MoodEntryDAO
         String sql = """
             SELECT COUNT(*) FROM mood_entries
             WHERE username = ?
-            AND date(timestamp) = date('now')
+            AND date(timestamp) = date('now', 'localtime')
         """;
 
         try (Connection conn = Database.getConnection();
-            PreparedStatement stmt = conn.prepareStatement(sql)) {
+            PreparedStatement stmt = conn.prepareStatement(sql)) 
+        {
 
             stmt.setString(1, username);
 
             ResultSet rs = stmt.executeQuery();
             return rs.getInt(1) > 0;
 
-        } catch (SQLException e) {
+        } 
+        catch (SQLException e) 
+        {
             e.printStackTrace();
             return false;
         }
