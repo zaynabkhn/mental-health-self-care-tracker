@@ -1,25 +1,54 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox spacing="15" alignment="CENTER"
+<VBox spacing="20" alignment="CENTER"
       xmlns:fx="http://javafx.com/fxml"
-      fx:controller="com.mhtracker.controller.MoodTrackerController">
+      fx:controller="com.mhtracker.controller.MoodTrackerController"
+      styleClass="app-root">
 
-    <Label text="Mood Tracker" style="-fx-font-size: 18px;"/>
+    <padding>
+        <Insets top="40" right="40" bottom="40" left="40"/>
+    </padding>
 
-    <HBox spacing="10" alignment="CENTER">
+    <Label text="Mood Tracker"
+           styleClass="app-title"/>
+
+    <Label text="Record how you're feeling today"
+           styleClass="app-subtitle"/>
+
+    <HBox spacing="12" alignment="CENTER">
         <Label text="Select your mood:"/>
-        <ComboBox fx:id="moodComboBox" prefWidth="150"/>
+        <ComboBox fx:id="moodComboBox" prefWidth="180"/>
     </HBox>
 
-    <Label text="Notes:"/>
-    <TextArea fx:id="notesArea" prefRowCount="4" prefWidth="250"/>
+    <VBox spacing="8" alignment="CENTER">
+        <Label text="Notes (optional):"/>
+        <TextArea fx:id="notesArea"
+                  prefWidth="420"
+                  prefHeight="140"
+                  wrapText="true"/>
+    </VBox>
 
-    <Button text="Save Entry" onAction="#handleSave"/>
+    <HBox spacing="12" alignment="CENTER">
+        <Button text="Save Entry"
+                onAction="#handleSave"
+                prefWidth="150"
+                prefHeight="40"
+                styleClass="success-button"/>
 
-    <Button text="Back to Dashboard" onAction="#handleBack"/>
-    <Button text="View History" onAction="#handleViewHistory"/>
+        <Button text="View History"
+                onAction="#handleViewHistory"
+                prefWidth="150"
+                prefHeight="40"
+                styleClass="primary-button"/>
 
+        <Button text="Back to Dashboard"
+                onAction="#handleBack"
+                prefWidth="180"
+                prefHeight="40"
+                styleClass="secondary-button"/>
+    </HBox>
 </VBox>

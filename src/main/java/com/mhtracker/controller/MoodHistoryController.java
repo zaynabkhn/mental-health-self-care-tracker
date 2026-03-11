@@ -4,6 +4,7 @@ import com.mhtracker.model.MoodEntry;
 import com.mhtracker.model.MoodEntryDAO;
 import com.mhtracker.model.Session;
 
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -13,10 +14,10 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextArea;
 import javafx.stage.Stage;
 
-public class MoodHistoryController 
-{
+public class MoodHistoryController {
 
     @FXML
     private TableView<MoodEntry> historyTable;
@@ -31,37 +32,47 @@ public class MoodHistoryController
     private TableColumn<MoodEntry, String> timeColumn;
 
     @FXML
-    public void initialize() 
-    {
+    private TextArea selectedNoteArea;
 
-        moodColumn.setCellValueFactory(data -> new javafx.beans.property.SimpleStringProperty(data.getValue().getMood()));
-        notesColumn.setCellValueFactory(data -> new javafx.beans.property.SimpleStringProperty(data.getValue().getNote()));
-        timeColumn.setCellValueFactory(data -> new javafx.beans.property.SimpleStringProperty(data.getValue().getTimestamp().toString()));
+    @FXML
+    public void initialize() {
+        moodColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getMood()));
+        notesColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getNote()));
+        timeColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getTimestamp().toString()));
 
         String username = Session.getLoggedInUsername();
 
         historyTable.setItems(FXCollections.observableArrayList(
                 MoodEntryDAO.getEntriesForUser(username)
         ));
+
+        historyTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+            if (newSelection != null) {
+                selectedNoteArea.setText(newSelection.getNote());
+            } else {
+                selectedNoteArea.clear();
+            }
+        });
     }
 
     @FXML
-    private void handleBack(ActionEvent event) 
-    {
-        try 
-        {
+    private void handleBack(ActionEvent event) {
+        try {
             FXMLLoader loader = new FXMLLoader(
                     getClass().getResource("/com/mhtracker/view/MoodTrackerView.fxml"));
 
             Parent root = loader.load();
-
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.setScene(new Scene(root, 400, 300));
-            stage.show();
 
-        } 
-        catch (Exception e) 
-        {
+            Scene scene = new Scene(root, 900, 600);
+            scene.getStylesheets().add(
+                    getClass().getResource("/com/mhtracker/view/AppStyles.css").toExternalForm()
+            );
+
+            stage.setTitle("Mental Health Tracker - Mood Tracker");
+            stage.setScene(scene);
+
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

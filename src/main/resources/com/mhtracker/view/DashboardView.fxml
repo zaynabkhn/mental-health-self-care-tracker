@@ -4,7 +4,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox spacing="20" alignment="CENTER"
+<VBox spacing="25" alignment="CENTER"
       xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.mhtracker.controller.DashboardController"
       styleClass="app-root">
@@ -13,32 +13,56 @@
         <Insets top="50" right="40" bottom="50" left="40"/>
     </padding>
 
+    <!-- Title -->
     <Label text="Mental Health Self-Care Tracker"
            styleClass="app-title"/>
 
+    <!-- Subtitle -->
     <Label text="Welcome to your dashboard!"
            styleClass="app-subtitle"/>
 
-    <Button fx:id="profileButton"
-            text="Open Profile"
-            onAction="#openProfile"
-            prefWidth="220"
-            prefHeight="42"
-            styleClass="primary-button"/>
+    <!-- Dashboard Action Panel -->
+    <VBox spacing="15" alignment="CENTER"
+          style="-fx-background-color: white;
+                 -fx-padding: 30;
+                 -fx-background-radius: 10;
+                 -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10,0,0,4);">
 
-    <Button fx:id="habitsButton"
-            text="Open Habits"
-            onAction="#openHabits"
-            prefWidth="220"
-            prefHeight="42"
-            styleClass="primary-button"/>
+        <!-- Profile -->
+        <Button fx:id="profileButton"
+                text="Open Profile"
+                onAction="#openProfile"
+                prefWidth="220"
+                prefHeight="42"
+                styleClass="primary-button"/>
 
-    <Button fx:id="logoutButton"
-            text="Logout"
-            onAction="#logout"
-            prefWidth="220"
-            prefHeight="42"
-            styleClass="danger-button"/>
-    <Button text="Open Mood Tracker" onAction="#handleOpenMoodTracker"/>
+        <!-- Habits -->
+        <Button fx:id="habitsButton"
+                text="Open Habits"
+                onAction="#openHabits"
+                prefWidth="220"
+                prefHeight="42"
+                styleClass="primary-button"/>
+
+        <!-- Mood Tracker -->
+        <Button fx:id="moodTrackerButton"
+                text="Open Mood Tracker"
+                onAction="#handleOpenMoodTracker"
+                prefWidth="220"
+                prefHeight="42"
+                styleClass="primary-button"/>
+
+        <!-- spacing before logout -->
+        <Region prefHeight="10"/>
+
+        <!-- Logout -->
+        <Button fx:id="logoutButton"
+                text="Logout"
+                onAction="#logout"
+                prefWidth="220"
+                prefHeight="42"
+                styleClass="danger-button"/>
+
+    </VBox>
 
 </VBox>

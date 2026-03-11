@@ -16,8 +16,8 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextArea;
 import javafx.stage.Stage;
 
-public class MoodTrackerController 
-{
+public class MoodTrackerController {
+
     @FXML
     private ComboBox<String> moodComboBox;
 
@@ -25,8 +25,7 @@ public class MoodTrackerController
     private TextArea notesArea;
 
     @FXML
-    public void initialize() 
-    {
+    public void initialize() {
         moodComboBox.getItems().addAll(
                 "Happy",
                 "Sad",
@@ -40,14 +39,12 @@ public class MoodTrackerController
     }
 
     @FXML
-    private void handleSave(Event event) 
-    {
+    private void handleSave(Event event) {
         String mood = moodComboBox.getValue();
         String notes = notesArea.getText();
         String username = Session.getLoggedInUsername();
 
-        if (mood == null) 
-        {
+        if (mood == null) {
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setTitle("Missing Mood");
             alert.setHeaderText(null);
@@ -56,11 +53,9 @@ public class MoodTrackerController
             return;
         }
 
-        // Check if user already saved today
-        if (MoodEntryDAO.hasEntryForToday(username)) 
-        {
+        if (MoodEntryDAO.hasEntryForToday(username)) {
             new Alert(Alert.AlertType.INFORMATION,
-                "You have already saved a mood entry today.").showAndWait();
+                    "You have already saved a mood entry today.").showAndWait();
             return;
         }
 
@@ -72,48 +67,51 @@ public class MoodTrackerController
         alert.setHeaderText(null);
         alert.setContentText("Your mood entry has been saved successfully!");
         alert.showAndWait();
-        // Later: call MoodEntryDAO.insert(...)
+
+        moodComboBox.setValue(null);
+        notesArea.clear();
     }
 
     @FXML
-    private void handleBack(Event event) 
-    {
-        try 
-        {
+    private void handleBack(Event event) {
+        try {
             FXMLLoader loader = new FXMLLoader(
                     getClass().getResource("/com/mhtracker/view/DashboardView.fxml"));
 
             Parent root = loader.load();
-
-            // Get the current stage from the button that was clicked
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
 
-            stage.setScene(new Scene(root, 400, 300));
+            Scene scene = new Scene(root, 900, 600);
+            scene.getStylesheets().add(
+                    getClass().getResource("/com/mhtracker/view/AppStyles.css").toExternalForm()
+            );
 
-        } 
-        catch (Exception e) 
-        {
+            stage.setTitle("Mental Health Tracker - Dashboard");
+            stage.setScene(scene);
+
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     @FXML
-    private void handleViewHistory(ActionEvent event) 
-    {
-        try 
-        {
+    private void handleViewHistory(ActionEvent event) {
+        try {
             FXMLLoader loader = new FXMLLoader(
                     getClass().getResource("/com/mhtracker/view/MoodHistoryView.fxml"));
 
             Parent root = loader.load();
-
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.setScene(new Scene(root, 400, 300));
-            stage.show();
 
-        } 
-        catch (Exception e) 
-        {
+            Scene scene = new Scene(root, 900, 600);
+            scene.getStylesheets().add(
+                    getClass().getResource("/com/mhtracker/view/AppStyles.css").toExternalForm()
+            );
+
+            stage.setTitle("Mental Health Tracker - Mood History");
+            stage.setScene(scene);
+
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

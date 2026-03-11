@@ -25,8 +25,13 @@ public class MainApp extends Application
                 getClass().getResource("/com/mhtracker/view/AppStyles.css").toExternalForm()
         );
 
-        stage.setTitle("Mental Health Tracker - Login");
+        stage.setTitle("Mental Health Self-Care Tracker");
         stage.setScene(scene);
+        stage.getIcons().add(
+                new javafx.scene.image.Image(
+                        getClass().getResourceAsStream("/com/mhtracker/view/app_icon.png")
+                )
+        );
         stage.setMinWidth(900);
         stage.setMinHeight(600);
         stage.centerOnScreen();
