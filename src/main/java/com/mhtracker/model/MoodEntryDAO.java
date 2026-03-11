@@ -97,15 +97,20 @@ public class MoodEntryDAO
         }
     }
 
-    public static void clearAll() {
+    //FOR DATABASE TESTING PURPOSES ONLY!
+    public static void clearAll() 
+    {
         String sql = "DELETE FROM mood_entries";
 
         try (Connection conn = Database.getConnection();
-            PreparedStatement stmt = conn.prepareStatement(sql)) {
+            PreparedStatement stmt = conn.prepareStatement(sql)) 
+        {
 
             stmt.executeUpdate();
 
-        } catch (SQLException e) {
+        } 
+        catch (SQLException e) 
+        {
             e.printStackTrace();
         }
     }

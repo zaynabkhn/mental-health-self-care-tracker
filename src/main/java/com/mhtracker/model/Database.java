@@ -8,8 +8,17 @@ import java.sql.Statement;
 public class Database {
 
     private static final String URL = "jdbc:sqlite:sqlite.db";
+    private static Connection testConnection = null;
+
+    public static void useTestConnection(Connection conn) 
+    {
+        testConnection = conn;
+    }
 
     public static Connection getConnection() throws SQLException {
+        if (testConnection != null) {
+            return testConnection;
+        }
         return DriverManager.getConnection(URL);
     }
 
@@ -35,9 +44,12 @@ public class Database {
             );
         """;
 
-        try (Connection conn = getConnection(); Statement stmt = conn.createStatement())
+        //Try-catch block editted to work with test cases.
+        try 
         {
-            System.out.println("Connected to: " + conn.getMetaData().getURL());
+            Connection conn = getConnection();
+            Statement stmt = conn.createStatement();
+
             stmt.execute(sqlUsers);
             stmt.execute("""
                 INSERT OR IGNORE INTO users (username, password)
@@ -45,7 +57,13 @@ public class Database {
             """);
             stmt.execute(sqlMoodEntries);
 
-            System.out.println("Database initialized.");
+            //Only close the connection if it's NOT the test DB
+            if (testConnection == null) 
+            {
+                stmt.close();
+                conn.close();
+            }
+
         } 
         catch (SQLException e) 
         {

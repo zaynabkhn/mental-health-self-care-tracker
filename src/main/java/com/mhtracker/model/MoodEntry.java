@@ -12,6 +12,7 @@ public class MoodEntry
     public static final DateTimeFormatter DB_FORMAT =
         DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
+    //Maybe unnecessary?
     public MoodEntry(String username, String mood, String note) 
     {
         this.username = username;
