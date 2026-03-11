@@ -1,6 +1,6 @@
 package com.mhtracker.controller;
 
-import com.mhtracker.model.User;
+import com.mhtracker.model.Session;
 import com.mhtracker.model.UserDAO;
 
 import javafx.fxml.FXML;
@@ -29,7 +29,10 @@ public class LoginController {
         String username = usernameField.getText();
         String password = passwordField.getText();
 
-        if (UserDAO.authenticate(username, password)) {
+        if (UserDAO.authenticate(username, password)) 
+        {
+            //Grab username value
+            Session.setLoggedInUsername(username);
 
             try {
                 FXMLLoader loader = new FXMLLoader(
@@ -54,7 +57,9 @@ public class LoginController {
                 e.printStackTrace();
             }
 
-        } else {
+        } 
+        else 
+        {
             messageLabel.setText("Invalid username or password");
             passwordField.clear();
         }

@@ -1,5 +1,9 @@
 package com.mhtracker.controller;
 
+import com.mhtracker.model.MoodEntry;
+import com.mhtracker.model.MoodEntryDAO;
+import com.mhtracker.model.Session;
+
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -45,7 +49,12 @@ public class MoodTrackerController
             return;
         }
 
-        System.out.println("Saving mood: " + mood + ", Notes: " + notes);
+        String username = Session.getLoggedInUsername();
+
+        MoodEntry entry = new MoodEntry(username, mood, notes);
+        MoodEntryDAO.insert(entry);
+
+        System.out.println("Mood entry saved for: " + username);
 
         // Later: call MoodEntryDAO.insert(...)
     }

@@ -23,6 +23,18 @@ public class Database {
             );
         """;
 
+        //Creates a mood entries table.
+        String sqlMoodEntries = """
+            CREATE TABLE IF NOT EXISTS mood_entries (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                username TEXT NOT NULL,
+                mood TEXT NOT NULL,
+                notes TEXT,
+                timestamp TEXT NOT NULL,
+                FOREIGN KEY (username) REFERENCES users(username)
+            );
+        """;
+
         try (Connection conn = getConnection(); Statement stmt = conn.createStatement())
         {
             System.out.println("Connected to: " + conn.getMetaData().getURL());
@@ -31,6 +43,7 @@ public class Database {
                 INSERT OR IGNORE INTO users (username, password)
                 VALUES ('admin', 'password');
             """);
+            stmt.execute(sqlMoodEntries);
 
             System.out.println("Database initialized.");
         } 

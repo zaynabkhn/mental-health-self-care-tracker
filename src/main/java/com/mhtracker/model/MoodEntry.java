@@ -3,12 +3,14 @@ import java.time.LocalDateTime;
 
 public class MoodEntry 
 {
+    private String username;
     private String mood;              //"Happy", "Sad", "Stressed"
     private String note;              //Optional user note
     private LocalDateTime timestamp;  //When the entry was created
 
-    public MoodEntry(String mood, String note) 
+    public MoodEntry(String username, String mood, String note) 
     {
+        this.username = username;
         this.mood = mood;
         this.note = note;
         this.timestamp = LocalDateTime.now();
@@ -22,6 +24,11 @@ public class MoodEntry
     }
 
     // Getters
+    public String getUsername() 
+    { 
+        return username; 
+    }
+    
     public String getMood() 
     {
         return mood;
