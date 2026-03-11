@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox spacing="15" alignment="CENTER"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.mhtracker.controller.MoodHistoryController">
+
+    <Label text="Mood History" style="-fx-font-size: 18px;"/>
+
+    <TableView fx:id="historyTable" prefWidth="350">
+        <columns>
+            <TableColumn fx:id="moodColumn" text="Mood" prefWidth="100"/>
+            <TableColumn fx:id="notesColumn" text="Notes" prefWidth="150"/>
+            <TableColumn fx:id="timeColumn" text="Timestamp" prefWidth="100"/>
+        </columns>
+    </TableView>
+
+    <Button text="Back" onAction="#handleBack"/>
+
+</VBox>

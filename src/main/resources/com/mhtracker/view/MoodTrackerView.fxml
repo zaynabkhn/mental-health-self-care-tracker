@@ -20,5 +20,6 @@
     <Button text="Save Entry" onAction="#handleSave"/>
 
     <Button text="Back to Dashboard" onAction="#handleBack"/>
+    <Button text="View History" onAction="#handleViewHistory"/>
 
 </VBox>
