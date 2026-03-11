@@ -44,6 +44,7 @@ public class MoodTrackerController
     {
         String mood = moodComboBox.getValue();
         String notes = notesArea.getText();
+        String username = Session.getLoggedInUsername();
 
         if (mood == null) 
         {
@@ -55,7 +56,13 @@ public class MoodTrackerController
             return;
         }
 
-        String username = Session.getLoggedInUsername();
+        // Check if user already saved today
+        if (MoodEntryDAO.hasEntryForToday(username)) 
+        {
+            new Alert(Alert.AlertType.INFORMATION,
+                "You have already saved a mood entry today.").showAndWait();
+            return;
+        }
 
         MoodEntry entry = new MoodEntry(username, mood, notes);
         MoodEntryDAO.insert(entry);
@@ -65,7 +72,6 @@ public class MoodTrackerController
         alert.setHeaderText(null);
         alert.setContentText("Your mood entry has been saved successfully!");
         alert.showAndWait();
-
         // Later: call MoodEntryDAO.insert(...)
     }
 

@@ -1,5 +1,6 @@
 package com.mhtracker.model;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class MoodEntry 
 {
@@ -7,6 +8,9 @@ public class MoodEntry
     private String mood;              //"Happy", "Sad", "Stressed"
     private String note;              //Optional user note
     private LocalDateTime timestamp;  //When the entry was created
+    //So that the mood history doesn't get borked
+    public static final DateTimeFormatter DB_FORMAT =
+        DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     public MoodEntry(String username, String mood, String note) 
     {
@@ -44,6 +48,11 @@ public class MoodEntry
         return timestamp;
     }
 
+    public String getTimestampString() 
+    {
+        return timestamp.format(DB_FORMAT);
+    }
+
     // Setters
     public void setMood(String mood) 
     {
@@ -55,9 +64,9 @@ public class MoodEntry
         this.note = note;
     }
 
-    public void setTimestamp(LocalDateTime timestamp) 
+    public void setTimestamp(String timestampString) 
     {
-        this.timestamp = timestamp;
+        this.timestamp = LocalDateTime.parse(timestampString.trim(), DB_FORMAT);
     }
 
     @Override

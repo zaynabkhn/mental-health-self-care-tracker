@@ -29,7 +29,7 @@ public class Database {
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 username TEXT NOT NULL,
                 mood TEXT NOT NULL,
-                notes TEXT,
+                note TEXT,
                 timestamp TEXT NOT NULL,
                 FOREIGN KEY (username) REFERENCES users(username)
             );
