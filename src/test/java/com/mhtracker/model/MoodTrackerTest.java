@@ -25,6 +25,7 @@ public class MoodTrackerTest
         Database.initialize(); 
 
         //Clear users table so testuser can be inserted.
+        conn.createStatement().execute("DELETE FROM mood_entries;");
         conn.createStatement().execute("DELETE FROM users;");
 
         //Add the test user so foreign key checks pass.
