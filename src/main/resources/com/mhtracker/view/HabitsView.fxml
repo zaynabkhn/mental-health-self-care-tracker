@@ -14,11 +14,11 @@
         <Button text="Add New Habit" onAction="#handleAddHabit" style="-fx-background-color: #4CAF50; -fx-text-fill: white;"/>
         <Button text="Edit Selected" onAction="#handleEditHabit" disable="true" fx:id="editButton"/>
         <Button text="Delete Selected" onAction="#handleDeleteHabit" disable="true" fx:id="deleteButton"/>
+        <Button text="Back to Dashboard" onAction="#goBackToDashboard"/>
     </HBox>
 
     <ListView fx:id="habitsListView" prefHeight="300.0"/>
 
-    <!-- Form for add/edit (shown in dialog or below) -->
     <TitledPane text="Add / Edit Habit" expanded="false">
         <VBox spacing="10">
             <Label text="Habit Name"/>

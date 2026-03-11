@@ -4,9 +4,18 @@
 <?import javafx.scene.layout.*?>
 
 <VBox spacing="20" alignment="CENTER"
-      xmlns:fx="http://javafx.com/fxml">
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.mhtracker.controller.DashboardController">
 
     <Label text="Mental Health Self-Care Tracker"/>
     <Label text="Welcome to your dashboard!"/>
+
+    <Button fx:id="profileButton"
+            text="Open Profile"
+            onAction="#openProfile"/>
+
+    <Button fx:id="habitsButton"
+            text="Open Habits"
+            onAction="#openHabits"/>
 
 </VBox>

@@ -5,57 +5,84 @@ import com.mhtracker.model.HabitType;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.input.MouseEvent;
+import javafx.stage.Stage;
 
 public class HabitsController {
 
-    @FXML private ListView<Habit> habitsListView;
-    @FXML private TextField nameField, targetField, unitField, categoryField;
-    @FXML private TextArea descriptionArea;
-    @FXML private ComboBox<HabitType> typeCombo;
-    @FXML private Button editButton, deleteButton;
+    @FXML
+    private ListView<Habit> habitsListView;
+
+    @FXML
+    private TextField nameField, targetField, unitField, categoryField;
+
+    @FXML
+    private TextArea descriptionArea;
+
+    @FXML
+    private ComboBox<HabitType> typeCombo;
+
+    @FXML
+    private Button editButton, deleteButton;
 
     private ObservableList<Habit> habits = FXCollections.observableArrayList();
-    private Habit selectedHabit = null; // for edit mode
+    private Habit selectedHabit = null;
 
     @FXML
     public void initialize() {
         habitsListView.setItems(habits);
         typeCombo.setItems(FXCollections.observableArrayList(HabitType.values()));
 
-        // Enable/disable edit/delete buttons when selection changes
         habitsListView.getSelectionModel().selectedItemProperty().addListener((obs, old, newVal) -> {
             selectedHabit = newVal;
             editButton.setDisable(newVal == null);
             deleteButton.setDisable(newVal == null);
+
             if (newVal != null) {
                 fillFormForEdit(newVal);
             }
         });
 
-        // TODO: Load habits from storage (JSON/SQLite) here in real version
-        // For now: dummy data
+        // Dummy data for now
         habits.add(new Habit("Drink water", "At least 8 glasses", HabitType.NUMERIC, 8, "glasses", "Hydration"));
         habits.add(new Habit("Meditate", "", HabitType.BOOLEAN, 0, "", "Mental"));
+
+        editButton.setDisable(true);
+        deleteButton.setDisable(true);
     }
 
     @FXML
     private void handleAddHabit() {
+        selectedHabit = null;
+        habitsListView.getSelectionModel().clearSelection();
         clearForm();
-        // Optionally expand the titled pane or open dialog
+        editButton.setDisable(true);
+        deleteButton.setDisable(true);
+    }
+
+    @FXML
+    private void handleEditHabit() {
+        if (selectedHabit != null) {
+            fillFormForEdit(selectedHabit);
+        }
     }
 
     @FXML
     private void handleSaveHabit() {
         String name = nameField.getText().trim();
+
         if (name.isEmpty()) {
             showAlert("Error", "Habit name is required.");
             return;
         }
 
         HabitType type = typeCombo.getValue();
-        if (type == null) type = HabitType.BOOLEAN;
+        if (type == null) {
+            type = HabitType.BOOLEAN;
+        }
 
         double target = 0;
         try {
@@ -77,31 +104,52 @@ public class HabitsController {
         );
 
         if (selectedHabit != null) {
-            // Edit mode – replace
             int index = habits.indexOf(selectedHabit);
             habits.set(index, habit);
         } else {
-            // Add new
             habits.add(habit);
         }
 
-        clearForm();
         selectedHabit = null;
+        habitsListView.getSelectionModel().clearSelection();
+        clearForm();
+        editButton.setDisable(true);
+        deleteButton.setDisable(true);
     }
 
     @FXML
     private void handleDeleteHabit() {
         if (selectedHabit != null) {
             habits.remove(selectedHabit);
-            clearForm();
             selectedHabit = null;
+            habitsListView.getSelectionModel().clearSelection();
+            clearForm();
+            editButton.setDisable(true);
+            deleteButton.setDisable(true);
         }
     }
 
     @FXML
     private void handleCancelEdit() {
-        clearForm();
         selectedHabit = null;
+        habitsListView.getSelectionModel().clearSelection();
+        clearForm();
+        editButton.setDisable(true);
+        deleteButton.setDisable(true);
+    }
+
+    @FXML
+    private void goBackToDashboard() {
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/com/mhtracker/view/DashboardView.fxml"));
+            Parent root = loader.load();
+
+            Stage stage = (Stage) habitsListView.getScene().getWindow();
+            stage.setScene(new Scene(root, 400, 300));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void fillFormForEdit(Habit habit) {
@@ -129,6 +177,4 @@ public class HabitsController {
         alert.setContentText(message);
         alert.showAndWait();
     }
-
-    // TODO: Add navigation back to dashboard, etc.
 }
