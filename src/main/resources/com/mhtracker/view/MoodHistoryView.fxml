@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox spacing="20" alignment="CENTER"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.mhtracker.controller.MoodHistoryController"
+      styleClass="app-root">
+
+    <padding>
+        <Insets top="40" right="40" bottom="40" left="40"/>
+    </padding>
+
+    <Label text="Mood History"
+           styleClass="app-title"/>
+
+    <Label text="Review your previous mood entries"
+           styleClass="app-subtitle"/>
+
+    <TableView fx:id="historyTable" prefWidth="700" prefHeight="280">
+        <columns>
+            <TableColumn fx:id="moodColumn" text="Mood" prefWidth="150"/>
+            <TableColumn fx:id="notesColumn" text="Notes" prefWidth="330"/>
+            <TableColumn fx:id="timeColumn" text="Timestamp" prefWidth="220"/>
+        </columns>
+    </TableView>
+
+    <VBox spacing="8" alignment="CENTER_LEFT">
+        <Label text="Selected Note:"/>
+        <TextArea fx:id="selectedNoteArea"
+                  prefWidth="700"
+                  prefHeight="100"
+                  editable="false"
+                  wrapText="true"/>
+    </VBox>
+
+    <Button text="Back"
+            onAction="#handleBack"
+            prefWidth="160"
+            prefHeight="40"
+            styleClass="secondary-button"/>
+</VBox>

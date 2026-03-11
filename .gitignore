@@ -1,3 +1,23 @@
+# Maven build output
 /target/
+
+# Java compiled files
 *.class
+
+# Logs
 *.log
+
+# IDE files
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Runtime data files (do not commit)
+sqlite.db
+profile.txt
+
+# Temporary files
+*.tmp

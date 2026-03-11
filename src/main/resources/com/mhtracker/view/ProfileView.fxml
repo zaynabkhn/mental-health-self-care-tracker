@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.mhtracker.controller.ProfileController"
+      alignment="CENTER"
+      spacing="18"
+      styleClass="app-root">
+
+    <padding>
+        <Insets top="50" right="40" bottom="50" left="40"/>
+    </padding>
+
+    <Label text="User Profile Management"
+           styleClass="app-title"/>
+
+    <Label text="Update your display name"
+           styleClass="app-subtitle"/>
+
+    <TextField fx:id="displayNameField"
+               promptText="Enter display name"
+               prefWidth="300"
+               prefHeight="40"/>
+
+    <Button text="Save Profile"
+            onAction="#saveProfile"
+            prefWidth="220"
+            prefHeight="42"
+            styleClass="primary-button"/>
+
+    <Button fx:id="backButton"
+            text="Back to Dashboard"
+            onAction="#goBackToDashboard"
+            prefWidth="220"
+            prefHeight="42"
+            styleClass="secondary-button"/>
+
+</VBox>

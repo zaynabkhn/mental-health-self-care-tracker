@@ -1,13 +1,15 @@
 package com.mhtracker.controller;
 
-import com.mhtracker.model.User;
+import com.mhtracker.model.Session;
+import com.mhtracker.model.UserDAO;
+
 import javafx.fxml.FXML;
-import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
+import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
 public class LoginController {
@@ -21,32 +23,45 @@ public class LoginController {
     @FXML
     private Label messageLabel;
 
-    private User demoUser = new User("admin", "password");
-
     @FXML
     private void handleLogin() {
 
         String username = usernameField.getText();
         String password = passwordField.getText();
 
-        if (demoUser.authenticate(username, password)) {
+        if (UserDAO.authenticate(username, password)) 
+        {
+            //Grab username value
+            Session.setLoggedInUsername(username);
 
             try {
-
                 FXMLLoader loader = new FXMLLoader(
                         getClass().getResource("/com/mhtracker/view/DashboardView.fxml"));
 
                 Parent root = loader.load();
 
                 Stage stage = (Stage) usernameField.getScene().getWindow();
-                stage.setScene(new Scene(root, 400, 300));
+                Scene scene = new Scene(root, 900, 600);
+                scene.getStylesheets().add(
+                        getClass().getResource("/com/mhtracker/view/AppStyles.css").toExternalForm()
+                );
+
+                stage.setTitle("Mental Health Tracker - Dashboard");
+                stage.setScene(scene);
+
+                usernameField.clear();
+                passwordField.clear();
+                messageLabel.setText("");
 
             } catch (Exception e) {
                 e.printStackTrace();
             }
 
-        } else {
+        } 
+        else 
+        {
             messageLabel.setText("Invalid username or password");
+            passwordField.clear();
         }
     }
 }
