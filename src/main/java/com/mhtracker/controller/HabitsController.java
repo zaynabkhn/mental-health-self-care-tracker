@@ -61,6 +61,8 @@ public class HabitsController {
         clearForm();
         editButton.setDisable(true);
         deleteButton.setDisable(true);
+
+        habitPane.setExpanded(true);
     }
 
     @FXML
@@ -120,14 +122,28 @@ public class HabitsController {
     @FXML
     private void handleDeleteHabit() {
         if (selectedHabit != null) {
+
+        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+        confirm.setTitle("Delete Habit");
+        confirm.setHeaderText("Delete selected habit?");
+        confirm.setContentText(selectedHabit.getName());
+
+        if (confirm.showAndWait().get() == ButtonType.OK) {
+
             habits.remove(selectedHabit);
             selectedHabit = null;
+
             habitsListView.getSelectionModel().clearSelection();
             clearForm();
+
             editButton.setDisable(true);
             deleteButton.setDisable(true);
+            }
         }
     }
+
+    @FXML
+    private TitledPane habitPane;
 
     @FXML
     private void handleCancelEdit() {
@@ -139,14 +155,22 @@ public class HabitsController {
     }
 
     @FXML
-    private void goBackToDashboard() {
+        private void goBackToDashboard() {
         try {
             FXMLLoader loader = new FXMLLoader(
-                    getClass().getResource("/com/mhtracker/view/DashboardView.fxml"));
+                getClass().getResource("/com/mhtracker/view/DashboardView.fxml"));
             Parent root = loader.load();
 
             Stage stage = (Stage) habitsListView.getScene().getWindow();
-            stage.setScene(new Scene(root, 400, 300));
+
+            Scene scene = new Scene(root, 900, 600);
+            scene.getStylesheets().add(
+                    getClass().getResource("/com/mhtracker/view/AppStyles.css").toExternalForm()
+        );
+
+            stage.setTitle("Mental Health Tracker - Dashboard");
+            stage.setScene(scene);
+
         } catch (Exception e) {
             e.printStackTrace();
         }

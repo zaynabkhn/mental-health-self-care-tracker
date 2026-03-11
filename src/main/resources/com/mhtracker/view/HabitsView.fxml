@@ -4,50 +4,112 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox prefHeight="600.0" prefWidth="900.0" spacing="15" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="com.mhtracker.controller.HabitsController">
-    <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
+<VBox prefHeight="600.0" prefWidth="900.0"
+      spacing="18"
+      xmlns="http://javafx.com/javafx/21"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.mhtracker.controller.HabitsController"
+      styleClass="app-root">
 
-    <Label text="My Habits" style="-fx-font-size: 22px; -fx-font-weight: bold;"/>
+    <padding>
+        <Insets top="30" right="30" bottom="30" left="30"/>
+    </padding>
 
-    <HBox spacing="10" alignment="CENTER_LEFT">
-        <Button text="Add New Habit" onAction="#handleAddHabit" style="-fx-background-color: #4CAF50; -fx-text-fill: white;"/>
-        <Button text="Edit Selected" onAction="#handleEditHabit" disable="true" fx:id="editButton"/>
-        <Button text="Delete Selected" onAction="#handleDeleteHabit" disable="true" fx:id="deleteButton"/>
-        <Button text="Back to Dashboard" onAction="#goBackToDashboard"/>
+    <Label text="Habit Management"
+           styleClass="app-title"/>
+
+    <Label text="Create, update, and manage your self-care habits"
+           styleClass="app-subtitle"/>
+
+    <HBox spacing="12" alignment="CENTER">
+        <Button text="Add New Habit"
+                onAction="#handleAddHabit"
+                prefWidth="170"
+                prefHeight="40"
+                styleClass="success-button"/>
+
+        <Button text="Edit Selected"
+                onAction="#handleEditHabit"
+                disable="true"
+                fx:id="editButton"
+                prefWidth="170"
+                prefHeight="40"
+                styleClass="primary-button"/>
+
+        <Button text="Delete Selected"
+                onAction="#handleDeleteHabit"
+                disable="true"
+                fx:id="deleteButton"
+                prefWidth="170"
+                prefHeight="40"
+                styleClass="danger-button"/>
+
+        <Button text="Back to Dashboard"
+                onAction="#goBackToDashboard"
+                prefWidth="190"
+                prefHeight="40"
+                styleClass="secondary-button"/>
     </HBox>
 
-    <ListView fx:id="habitsListView" prefHeight="300.0"/>
+    <ListView fx:id="habitsListView" prefHeight="220.0"/>
 
-    <TitledPane text="Add / Edit Habit" expanded="false">
-        <VBox spacing="10">
+    <TitledPane fx:id="habitPane"
+                text="Add / Edit Habit"
+                expanded="false">
+        <VBox spacing="14">
+            <padding>
+                <Insets top="15" right="15" bottom="15" left="15"/>
+            </padding>
+
             <Label text="Habit Name"/>
-            <TextField fx:id="nameField" promptText="e.g., Meditate"/>
+            <TextField fx:id="nameField"
+                       promptText="e.g., Meditate"
+                       prefHeight="36"/>
 
             <Label text="Description (optional)"/>
-            <TextArea fx:id="descriptionArea" prefHeight="60"/>
+            <TextArea fx:id="descriptionArea"
+                      prefHeight="70"/>
 
-            <HBox spacing="20">
-                <VBox>
+            <HBox spacing="16">
+                <VBox spacing="6">
                     <Label text="Type"/>
-                    <ComboBox fx:id="typeCombo" promptText="Select type"/>
+                    <ComboBox fx:id="typeCombo"
+                              promptText="Select type"
+                              prefWidth="160"/>
                 </VBox>
-                <VBox>
+
+                <VBox spacing="6">
                     <Label text="Target (for numeric)"/>
-                    <TextField fx:id="targetField" promptText="e.g., 10"/>
+                    <TextField fx:id="targetField"
+                               promptText="e.g., 10"
+                               prefWidth="160"/>
                 </VBox>
-                <VBox>
+
+                <VBox spacing="6">
                     <Label text="Unit"/>
-                    <TextField fx:id="unitField" promptText="min, glasses, steps"/>
+                    <TextField fx:id="unitField"
+                               promptText="min, glasses, steps"
+                               prefWidth="180"/>
                 </VBox>
             </HBox>
 
             <Label text="Category (optional)"/>
-            <TextField fx:id="categoryField" promptText="Physical, Mental, etc."/>
+            <TextField fx:id="categoryField"
+                       promptText="Physical, Mental, etc."
+                       prefHeight="36"/>
 
-            <HBox spacing="10">
-                <Button text="Save" onAction="#handleSaveHabit" style="-fx-background-color: #2196F3; -fx-text-fill: white;"/>
-                <Button text="Cancel" onAction="#handleCancelEdit"/>
+            <HBox spacing="12" alignment="CENTER_LEFT">
+                <Button text="Save"
+                        onAction="#handleSaveHabit"
+                        prefWidth="120"
+                        prefHeight="38"
+                        styleClass="primary-button"/>
+
+                <Button text="Cancel"
+                        onAction="#handleCancelEdit"
+                        prefWidth="120"
+                        prefHeight="38"
+                        styleClass="secondary-button"/>
             </HBox>
         </VBox>
     </TitledPane>

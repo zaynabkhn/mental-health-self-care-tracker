@@ -54,16 +54,24 @@ public class ProfileController {
     }
 
     @FXML
-    private void goBackToDashboard() {
+        private void goBackToDashboard() {
         try {
-            FXMLLoader loader = new FXMLLoader(
-                    getClass().getResource("/com/mhtracker/view/DashboardView.fxml"));
-            Parent root = loader.load();
+        FXMLLoader loader = new FXMLLoader(
+                getClass().getResource("/com/mhtracker/view/DashboardView.fxml"));
+        Parent root = loader.load();
 
-            Stage stage = (Stage) backButton.getScene().getWindow();
-            stage.setScene(new Scene(root, 400, 300));
+        Stage stage = (Stage) displayNameField.getScene().getWindow();
+
+        Scene scene = new Scene(root, 900, 600);
+        scene.getStylesheets().add(
+                getClass().getResource("/com/mhtracker/view/AppStyles.css").toExternalForm()
+        );
+
+        stage.setTitle("Mental Health Tracker - Dashboard");
+        stage.setScene(scene);
+
         } catch (Exception e) {
-            e.printStackTrace();
+        e.printStackTrace();
         }
     }
 }

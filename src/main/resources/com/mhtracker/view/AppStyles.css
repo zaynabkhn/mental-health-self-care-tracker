@@ -1,0 +1,68 @@
+.app-root {
+    -fx-background-color: linear-gradient(to bottom, #f7f9fc, #eef3f8);
+}
+
+.app-title {
+    -fx-font-size: 28px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1f2d3d;
+}
+
+.app-subtitle {
+    -fx-font-size: 17px;
+    -fx-text-fill: #4b5d73;
+}
+
+.primary-button {
+    -fx-background-color: #5b8def;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-background-radius: 8;
+    -fx-cursor: hand;
+}
+
+.primary-button:hover {
+    -fx-background-color: #4a7de0;
+}
+
+.success-button {
+    -fx-background-color: #4CAF50;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-background-radius: 8;
+    -fx-cursor: hand;
+}
+
+.success-button:hover {
+    -fx-background-color: #439b47;
+}
+
+.danger-button {
+    -fx-background-color: #d9534f;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-background-radius: 8;
+    -fx-cursor: hand;
+}
+
+.danger-button:hover {
+    -fx-background-color: #c84440;
+}
+
+.error-label {
+    -fx-text-fill: #d9534f;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+}
+
+.secondary-button {
+    -fx-background-color: #dfe6ee;
+    -fx-text-fill: #1f2d3d;
+    -fx-font-size: 14px;
+    -fx-background-radius: 8;
+    -fx-cursor: hand;
+}
+
+.secondary-button:hover {
+    -fx-background-color: #cfd8e3;
+}

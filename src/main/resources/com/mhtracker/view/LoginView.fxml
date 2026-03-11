@@ -1,20 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox spacing="10" alignment="CENTER"
+<VBox spacing="18" alignment="CENTER"
       xmlns:fx="http://javafx.com/fxml"
-      fx:controller="com.mhtracker.controller.LoginController">
+      fx:controller="com.mhtracker.controller.LoginController"
+      styleClass="app-root">
 
-    <Label text="Mental Health Self-Care Tracker Login"/>
+    <padding>
+        <Insets top="50" right="40" bottom="50" left="40"/>
+    </padding>
 
-    <TextField fx:id="usernameField" promptText="Username"/>
+    <Label text="Mental Health Self-Care Tracker Login"
+           styleClass="app-title"/>
 
-    <PasswordField fx:id="passwordField" promptText="Password"/>
+    <TextField fx:id="usernameField"
+               promptText="Username"
+               prefWidth="250"
+               prefHeight="38"/>
 
-    <Button text="Login" onAction="#handleLogin"/>
+    <PasswordField fx:id="passwordField"
+                   promptText="Password"
+                   prefWidth="250"
+                   prefHeight="38"/>
 
-    <Label fx:id="messageLabel"/>
+    <Button text="Login"
+            onAction="#handleLogin"
+            prefWidth="200"
+            prefHeight="40"
+            styleClass="success-button"/>
 
+    <Label fx:id="messageLabel"
+           styleClass="error-label"/>
 </VBox>

@@ -4,8 +4,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.stage.Stage;
 import javafx.scene.control.Button;
+import javafx.stage.Stage;
 
 public class DashboardController {
 
@@ -16,6 +16,9 @@ public class DashboardController {
     private Button habitsButton;
 
     @FXML
+    private Button logoutButton;
+
+    @FXML
     private void openProfile() {
         try {
             FXMLLoader loader = new FXMLLoader(
@@ -23,7 +26,13 @@ public class DashboardController {
             Parent root = loader.load();
 
             Stage stage = (Stage) profileButton.getScene().getWindow();
-            stage.setScene(new Scene(root, 400, 300));
+            Scene scene = new Scene(root, 900, 600);
+            scene.getStylesheets().add(
+                    getClass().getResource("/com/mhtracker/view/AppStyles.css").toExternalForm()
+            );
+
+            stage.setTitle("Mental Health Tracker - Profile");
+            stage.setScene(scene);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -37,7 +46,33 @@ public class DashboardController {
             Parent root = loader.load();
 
             Stage stage = (Stage) habitsButton.getScene().getWindow();
-            stage.setScene(new Scene(root, 900, 600));
+            Scene scene = new Scene(root, 900, 600);
+            scene.getStylesheets().add(
+                    getClass().getResource("/com/mhtracker/view/AppStyles.css").toExternalForm()
+            );
+
+            stage.setTitle("Mental Health Tracker - Habits");
+            stage.setScene(scene);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void logout() {
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/com/mhtracker/view/LoginView.fxml"));
+            Parent root = loader.load();
+
+            Stage stage = (Stage) logoutButton.getScene().getWindow();
+            Scene scene = new Scene(root, 900, 600);
+            scene.getStylesheets().add(
+                    getClass().getResource("/com/mhtracker/view/AppStyles.css").toExternalForm()
+            );
+
+            stage.setTitle("Mental Health Tracker - Login");
+            stage.setScene(scene);
         } catch (Exception e) {
             e.printStackTrace();
         }
