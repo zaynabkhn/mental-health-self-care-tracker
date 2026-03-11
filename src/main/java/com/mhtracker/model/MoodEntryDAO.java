@@ -16,17 +16,23 @@ public class MoodEntryDAO
     {
         String sql = "INSERT INTO mood_entries (username, mood, note, timestamp) VALUES (?, ?, ?, ?)";
 
-        try (Connection conn = Database.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try 
+        {
+            Connection conn = Database.getConnection();
 
-            stmt.setString(1, entry.getUsername());
-            stmt.setString(2, entry.getMood());
-            stmt.setString(3, entry.getNote());
-            stmt.setString(4, entry.getTimestamp().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-            stmt.executeUpdate();
+                stmt.setString(1, entry.getUsername());
+                stmt.setString(2, entry.getMood());
+                stmt.setString(3, entry.getNote());
+                stmt.setString(4, entry.getTimestamp().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
 
-        } catch (SQLException e) {
+                stmt.executeUpdate();
+
+            } 
+        }
+        catch (SQLException e) 
+        {
             e.printStackTrace();
         }
     }
@@ -37,32 +43,35 @@ public class MoodEntryDAO
 
         String sql = "SELECT mood, note, timestamp FROM mood_entries WHERE username = ? ORDER BY timestamp DESC";
 
-        try (Connection conn = Database.getConnection();
-            PreparedStatement stmt = conn.prepareStatement(sql)) 
+        try
         {
-
-            stmt.setString(1, username);
-
-            ResultSet rs = stmt.executeQuery();
-
-            while (rs.next()) 
+            Connection conn = Database.getConnection();
+            try (PreparedStatement stmt = conn.prepareStatement(sql)) 
             {
-                String mood = rs.getString("mood");
-                String note = rs.getString("note");
-                String ts = rs.getString("timestamp").trim();
 
-                LocalDateTime parsed = LocalDateTime.parse(ts, MoodEntry.DB_FORMAT);
+                stmt.setString(1, username);
 
-                // Uses the correct constructor hopefully.
-                MoodEntry entry = new MoodEntry(mood, note, parsed);
+                ResultSet rs = stmt.executeQuery();
 
-                // Set username manually
-                entry.setUsername(username);
+                while (rs.next()) 
+                {
+                    String mood = rs.getString("mood");
+                    String note = rs.getString("note");
+                    String ts = rs.getString("timestamp").trim();
 
-                entries.add(entry);
-            }
+                    LocalDateTime parsed = LocalDateTime.parse(ts, MoodEntry.DB_FORMAT);
 
-        } 
+                    // Uses the correct constructor hopefully.
+                    MoodEntry entry = new MoodEntry(mood, note, parsed);
+
+                    // Set username manually
+                    entry.setUsername(username);
+
+                    entries.add(entry);
+                }
+
+            } 
+        }
         catch (SQLException e) 
         {
             e.printStackTrace();
@@ -80,16 +89,19 @@ public class MoodEntryDAO
             AND date(timestamp) = date('now', 'localtime')
         """;
 
-        try (Connection conn = Database.getConnection();
-            PreparedStatement stmt = conn.prepareStatement(sql)) 
+        try
         {
+            Connection conn = Database.getConnection();
+            try (PreparedStatement stmt = conn.prepareStatement(sql)) 
+            {
 
-            stmt.setString(1, username);
+                stmt.setString(1, username);
 
-            ResultSet rs = stmt.executeQuery();
-            return rs.getInt(1) > 0;
+                ResultSet rs = stmt.executeQuery();
+                return rs.getInt(1) > 0;
 
-        } 
+            } 
+        }
         catch (SQLException e) 
         {
             e.printStackTrace();
@@ -102,13 +114,16 @@ public class MoodEntryDAO
     {
         String sql = "DELETE FROM mood_entries";
 
-        try (Connection conn = Database.getConnection();
-            PreparedStatement stmt = conn.prepareStatement(sql)) 
+        try
         {
+            Connection conn = Database.getConnection();
+            try (PreparedStatement stmt = conn.prepareStatement(sql)) 
+            {
 
-            stmt.executeUpdate();
+                stmt.executeUpdate();
 
-        } 
+            } 
+        }
         catch (SQLException e) 
         {
             e.printStackTrace();

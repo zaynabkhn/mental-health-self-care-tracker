@@ -18,16 +18,17 @@ public class MoodTrackerTest
     @BeforeEach
     public void setup() throws SQLException 
     {
-        Connection conn = DriverManager.getConnection("jdbc:sqlite::memory:");
+        Connection conn = DriverManager.getConnection("jdbc:sqlite:file:memdb1?mode=memory&cache=shared");
         Database.useTestConnection(conn);
+        conn.createStatement().execute("PRAGMA foreign_keys = ON;");
         //This creates tables in memory.
         Database.initialize(); 
 
+        //Clear users table so testuser can be inserted.
+        conn.createStatement().execute("DELETE FROM users;");
+
         //Add the test user so foreign key checks pass.
-        try (var stmt = conn.createStatement()) 
-        {
-            stmt.execute("INSERT INTO users (username, password) VALUES ('testuser', 'pw');");
-        }
+        conn.createStatement().execute("INSERT INTO users (username, password) VALUES ('testuser', 'pw');");
     }
 
     //MoodEntry Feature Tests
