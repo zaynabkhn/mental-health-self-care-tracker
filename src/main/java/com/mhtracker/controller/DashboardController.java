@@ -60,13 +60,13 @@ public class DashboardController {
     }
 
     @FXML
-    private void logout() {
+    private void logout(Event event) {
         try {
             FXMLLoader loader = new FXMLLoader(
                     getClass().getResource("/com/mhtracker/view/LoginView.fxml"));
             Parent root = loader.load();
 
-            Stage stage = (Stage) logoutButton.getScene().getWindow();
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             Scene scene = new Scene(root, 900, 600);
             scene.getStylesheets().add(
                     getClass().getResource("/com/mhtracker/view/AppStyles.css").toExternalForm()
