@@ -1,6 +1,7 @@
 package com.mhtracker;
 
 import com.mhtracker.model.Database;
+import com.mhtracker.model.MoodEntryDAO;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -36,7 +37,7 @@ public class MainApp extends Application
         stage.setMinHeight(600);
         stage.centerOnScreen();
         stage.show();
-        //MoodEntryDAO.clearAll(); //USE THIS ONLY WHEN TESTING THE MOOD DATABASE TABLE!
+        MoodEntryDAO.clearAll(); //USE THIS ONLY WHEN TESTING THE MOOD DATABASE TABLE!
     }
 
     public static void main(String[] args) 
