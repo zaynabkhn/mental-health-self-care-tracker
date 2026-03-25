@@ -52,6 +52,13 @@
                 prefHeight="42"
                 styleClass="primary-button"/>
 
+        <!-- Journal -->
+        <Button text="Open Journal"
+                onAction="#openJournal"
+                prefWidth="220"
+                prefHeight="42"
+                styleClass="primary-button"/>
+
         <!-- spacing before logout -->
         <Region prefHeight="10"/>
 

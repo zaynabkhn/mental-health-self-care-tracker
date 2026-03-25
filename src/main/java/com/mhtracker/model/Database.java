@@ -10,9 +10,12 @@ public class Database {
     private static final String URL = "jdbc:sqlite:sqlite.db";
     private static Connection testConnection = null;
 
-    public static void useTestConnection(Connection conn) 
-    {
+    public static void useTestConnection(Connection conn) {
         testConnection = conn;
+    }
+
+    public static boolean isUsingTestConnection() {
+        return testConnection != null;
     }
 
     public static Connection getConnection() throws SQLException {
@@ -23,7 +26,7 @@ public class Database {
     }
 
     public static void initialize() {
-        //Creates a table of users.
+
         String sqlUsers = """
             CREATE TABLE IF NOT EXISTS users (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -32,7 +35,6 @@ public class Database {
             );
         """;
 
-        //Creates a mood entries table.
         String sqlMoodEntries = """
             CREATE TABLE IF NOT EXISTS mood_entries (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -44,29 +46,68 @@ public class Database {
             );
         """;
 
-        //Try-catch block editted to work with test cases.
-        try 
-        {
+        String sqlHabits = """
+            CREATE TABLE IF NOT EXISTS habits (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                username TEXT NOT NULL,
+                name TEXT NOT NULL,
+                description TEXT,
+                type TEXT NOT NULL,
+                target_value REAL DEFAULT 0,
+                unit TEXT,
+                category TEXT,
+                weekly_goal INTEGER DEFAULT 0,
+                created_date TEXT NOT NULL,
+                FOREIGN KEY (username) REFERENCES users(username)
+            );
+        """;
+
+        String sqlHabitLogs = """
+            CREATE TABLE IF NOT EXISTS habit_logs (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                habit_id INTEGER NOT NULL,
+                username TEXT NOT NULL,
+                log_date TEXT NOT NULL,
+                value REAL DEFAULT 1,
+                completed INTEGER NOT NULL DEFAULT 1,
+                UNIQUE(habit_id, log_date),
+                FOREIGN KEY (habit_id) REFERENCES habits(id),
+                FOREIGN KEY (username) REFERENCES users(username)
+            );
+        """;
+
+        String sqlJournalEntries = """
+            CREATE TABLE IF NOT EXISTS journal_entries (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                username TEXT NOT NULL,
+                content TEXT NOT NULL,
+                timestamp TEXT NOT NULL,
+                FOREIGN KEY (username) REFERENCES users(username)
+            );
+        """;
+
+        try {
             Connection conn = getConnection();
             Statement stmt = conn.createStatement();
 
             stmt.execute(sqlUsers);
+
             stmt.execute("""
                 INSERT OR IGNORE INTO users (username, password)
                 VALUES ('admin', 'password');
             """);
-            stmt.execute(sqlMoodEntries);
 
-            //Only close the connection if it's NOT the test DB
-            if (testConnection == null) 
-            {
+            stmt.execute(sqlMoodEntries);
+            stmt.execute(sqlHabits);
+            stmt.execute(sqlHabitLogs);
+            stmt.execute(sqlJournalEntries);
+
+            if (!isUsingTestConnection()) {
                 stmt.close();
                 conn.close();
             }
 
-        } 
-        catch (SQLException e) 
-        {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }

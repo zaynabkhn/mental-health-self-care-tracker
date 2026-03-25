@@ -102,4 +102,24 @@ public class DashboardController {
             e.printStackTrace();
         }
     }
+
+    @FXML
+    private void openJournal() {
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                getClass().getResource("/com/mhtracker/view/JournalView.fxml"));
+            Parent root = loader.load();
+
+            Stage stage = (Stage) profileButton.getScene().getWindow();
+            Scene scene = new Scene(root, 900, 600);
+            scene.getStylesheets().add(
+                getClass().getResource("/com/mhtracker/view/AppStyles.css").toExternalForm()
+            );
+
+            stage.setTitle("Mental Health Tracker - Journal");
+            stage.setScene(scene);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }

@@ -12,6 +12,7 @@ public class Habit {
     private String unit;            // Optional: "glasses", "min", "steps"
     private LocalDate createdDate;
     private String category;        // Optional: "Physical", "Mental", "Hydration", etc.
+    private int weeklyGoal;
 
     // Constructor for new habits
     public Habit(String name, String description, HabitType type, double targetValue, String unit, String category) {
@@ -60,6 +61,13 @@ public class Habit {
 
     public String getCategory() { return category; }
     public void setCategory(String category) { this.category = category; }
+
+    public int getWeeklyGoal() {
+    return weeklyGoal;
+    }
+    public void setWeeklyGoal(int weeklyGoal) {
+    this.weeklyGoal = weeklyGoal;
+    }
 
     @Override
     public boolean equals(Object o) {

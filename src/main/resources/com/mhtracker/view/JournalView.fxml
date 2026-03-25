@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox spacing="18" alignment="CENTER"
+      xmlns="http://javafx.com/javafx/21"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.mhtracker.controller.JournalController"
+      styleClass="app-root">
+
+    <padding>
+        <Insets top="30" right="30" bottom="30" left="30"/>
+    </padding>
+
+    <Label text="Journal Entries"
+           styleClass="app-title"/>
+
+    <Label text="Write and reflect on your day"
+           styleClass="app-subtitle"/>
+
+    <TextArea fx:id="journalTextArea"
+              promptText="Write your thoughts here..."
+              prefWidth="700"
+              prefHeight="160"
+              wrapText="true"/>
+
+    <HBox spacing="12" alignment="CENTER">
+        <Button text="Save Entry"
+                onAction="#handleSaveEntry"
+                prefWidth="150"
+                prefHeight="40"
+                styleClass="success-button"/>
+
+        <Button text="Back to Dashboard"
+                onAction="#handleBackToDashboard"
+                prefWidth="180"
+                prefHeight="40"
+                styleClass="secondary-button"/>
+    </HBox>
+
+    <HBox spacing="10" alignment="CENTER">
+        <TextField fx:id="searchField"
+            promptText="Search journal entries..."
+            prefWidth="400"/>
+
+        <Button text="Search"
+            onAction="#handleSearch"
+            prefWidth="100"
+            styleClass="primary-button"/>
+
+        <Button text="Clear"
+            onAction="#handleClearSearch"
+            prefWidth="100"
+            styleClass="secondary-button"/>
+    </HBox>
+
+    <TableView fx:id="journalTable" prefWidth="700" prefHeight="260">
+        <columns>
+            <TableColumn fx:id="timestampColumn" text="Timestamp" prefWidth="200"/>
+            <TableColumn fx:id="contentColumn" text="Entry" prefWidth="480"/>
+        </columns>
+    </TableView>
+
+</VBox>

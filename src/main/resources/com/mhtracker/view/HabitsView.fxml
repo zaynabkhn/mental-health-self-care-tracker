@@ -49,6 +49,12 @@
                 prefWidth="190"
                 prefHeight="40"
                 styleClass="secondary-button"/>
+
+        <Button text="Mark Complete Today"
+                onAction="#handleMarkCompleteToday"
+                prefWidth="200"
+                prefHeight="40"
+                styleClass="success-button"/>
     </HBox>
 
     <ListView fx:id="habitsListView" prefHeight="220.0"/>
@@ -97,6 +103,11 @@
             <TextField fx:id="categoryField"
                        promptText="Physical, Mental, etc."
                        prefHeight="36"/>
+
+            <Label text="Weekly Goal (optional)"/>
+            <TextField fx:id="weeklyGoalField"
+                        promptText="e.g., 3"
+                        prefHeight="36"/>
 
             <HBox spacing="12" alignment="CENTER_LEFT">
                 <Button text="Save"
