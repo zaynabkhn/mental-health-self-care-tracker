@@ -20,7 +20,7 @@
     <Label text="Write and reflect on your day"
            styleClass="app-subtitle"/>
 
-    <HBox spacing="8" alignment="CENTER_LEFT">
+    <HBox spacing="8" alignment="CENTER">
         <Label text="Title" styleClass="small-label"/>
         <TextField fx:id="titleField" promptText="Entry title (optional)" prefWidth="700"/>
     </HBox>
