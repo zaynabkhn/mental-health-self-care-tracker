@@ -6,37 +6,42 @@
 
 <VBox spacing="18" alignment="CENTER"
       xmlns:fx="http://javafx.com/fxml"
-      fx:controller="com.mhtracker.controller.LoginController"
+      fx:controller="com.mhtracker.controller.SignupController"
       styleClass="app-root">
 
     <padding>
         <Insets top="50" right="40" bottom="50" left="40"/>
     </padding>
 
-    <Label text="Mental Health Self-Care Tracker Login"
+    <Label text="Create Account"
            styleClass="app-title"/>
 
     <TextField fx:id="usernameField"
-               promptText="Username"
-               prefWidth="250"
+               promptText="Choose a username"
+               prefWidth="260"
                prefHeight="38"/>
 
     <PasswordField fx:id="passwordField"
-                   promptText="Password"
-                   prefWidth="250"
+                   promptText="Choose a password"
+                   prefWidth="260"
                    prefHeight="38"/>
 
-    <Button text="Login"
-            onAction="#handleLogin"
+    <PasswordField fx:id="confirmPasswordField"
+                   promptText="Confirm password"
+                   prefWidth="260"
+                   prefHeight="38"/>
+
+    <Button text="Sign Up"
+            onAction="#handleSignup"
             prefWidth="200"
             prefHeight="40"
             styleClass="success-button"/>
 
-    <Button text="Create Account"
-            onAction="#openSignup"
+    <Button text="Back to Login"
+            onAction="#goBackToLogin"
             prefWidth="200"
             prefHeight="40"
-            styleClass="primary-button"/>
+            styleClass="secondary-button"/>
 
     <Label fx:id="messageLabel"
            styleClass="error-label"/>
