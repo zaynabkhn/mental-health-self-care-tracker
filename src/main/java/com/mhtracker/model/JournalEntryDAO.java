@@ -5,9 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,8 +15,8 @@ public class JournalEntryDAO
     public static void insertEntry(JournalEntry entry) 
     {
         String sql = """
-            INSERT INTO journal_entries (username, content, timestamp)
-            VALUES (?, ?, ?)
+            INSERT INTO journal_entries (username, title, content, timestamp)
+            VALUES (?, ?, ?, ?)
         """;
 
         Connection conn = null;
@@ -29,8 +27,9 @@ public class JournalEntryDAO
             try (PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) 
             {
                 stmt.setString(1, entry.getUsername());
-                stmt.setString(2, entry.getContent());
-                stmt.setString(3, entry.getTimestampString());
+                stmt.setString(2, entry.getTitle());
+                stmt.setString(3, entry.getContent());
+                stmt.setString(4, entry.getTimestampString());
 
                 stmt.executeUpdate();
 
@@ -66,7 +65,7 @@ public class JournalEntryDAO
         List<JournalEntry> entries = new ArrayList<>();
 
         String sql = """
-            SELECT id, username, content, timestamp
+            SELECT id, username, title, content, timestamp
             FROM journal_entries
             WHERE username = ?
             ORDER BY timestamp DESC
@@ -87,6 +86,7 @@ public class JournalEntryDAO
                     JournalEntry entry = new JournalEntry(
                             rs.getLong("id"),
                             rs.getString("username"),
+                            rs.getString("title"),
                             rs.getString("content"),
                             LocalDateTime.parse(rs.getString("timestamp"), JournalEntry.DB_FORMAT)
                     );
@@ -130,42 +130,25 @@ public class JournalEntryDAO
      * startDate and endDate are LocalDate (date-only) and will be converted to start/end of day.
      * If startDate or endDate is null, that bound is ignored.
      */
-    public static List<JournalEntry> searchEntries(String username, String keyword, LocalDate startDate, LocalDate endDate) 
-    {
-        LocalDateTime start = (startDate == null) ? null : startDate.atStartOfDay();
-        LocalDateTime end = (endDate == null) ? null : endDate.atTime(LocalTime.MAX);
-        return searchEntries(username, keyword, start, end);
-    }
-
-    /**
-     * Search by username, optional keyword, and optional LocalDateTime bounds (inclusive).
-     * Any null parameter is treated as "no bound" or "no keyword".
-     */
     public static List<JournalEntry> searchEntries(String username, String keyword, LocalDateTime start, LocalDateTime end) 
     {
         List<JournalEntry> entries = new ArrayList<>();
+        if (username == null) return entries;
 
-        if (username == null) 
-        {
-            return entries;
-        }
-
-        // Normalize keyword: treat null as empty and trim whitespace
         String raw = (keyword == null) ? "" : keyword.trim();
         boolean hasKeyword = !raw.isEmpty();
         boolean hasStart = start != null;
         boolean hasEnd = end != null;
 
-        // Build SQL dynamically based on which filters are present
         StringBuilder sql = new StringBuilder("""
-            SELECT id, username, content, timestamp
+            SELECT id, username, title, content, timestamp
             FROM journal_entries
             WHERE username = ?
             """);
 
         if (hasKeyword) 
         {
-            sql.append("\n  AND LOWER(content) LIKE ? ESCAPE '\\'");
+            sql.append("\n  AND (LOWER(title) LIKE ? ESCAPE '\\' OR LOWER(content) LIKE ? ESCAPE '\\')");
         }
 
         if (hasStart) 
@@ -177,6 +160,7 @@ public class JournalEntryDAO
         {
             sql.append("\n  AND timestamp <= ?");
         }
+
         sql.append("\n  ORDER BY timestamp DESC");
 
         Connection conn = null;
@@ -191,12 +175,14 @@ public class JournalEntryDAO
 
                 if (hasKeyword) 
                 {
-                    //Escape backslash first, then % and _
+                    // Escape backslash first, then % and _
                     String escaped = raw
                             .replace("\\", "\\\\")
                             .replace("%", "\\%")
                             .replace("_", "\\_");
                     String pattern = "%" + escaped.toLowerCase() + "%";
+                    //Bind for title and content
+                    stmt.setString(idx++, pattern);
                     stmt.setString(idx++, pattern);
                 }
 
@@ -217,6 +203,7 @@ public class JournalEntryDAO
                         JournalEntry entry = new JournalEntry(
                                 rs.getLong("id"),
                                 rs.getString("username"),
+                                rs.getString("title"),
                                 rs.getString("content"),
                                 LocalDateTime.parse(rs.getString("timestamp"), JournalEntry.DB_FORMAT)
                         );

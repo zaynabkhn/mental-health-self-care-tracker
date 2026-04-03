@@ -2,6 +2,7 @@ package com.mhtracker.model;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
@@ -80,6 +81,7 @@ public class Database {
             CREATE TABLE IF NOT EXISTS journal_entries (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 username TEXT NOT NULL,
+                title TEXT DEFAULT '',
                 content TEXT NOT NULL,
                 timestamp TEXT NOT NULL,
                 FOREIGN KEY (username) REFERENCES users(username)
@@ -102,6 +104,19 @@ public class Database {
             stmt.execute(sqlHabitLogs);
             stmt.execute(sqlJournalEntries);
 
+            if (!columnExists(conn, "journal_entries", "title")) 
+            {
+                try 
+                {
+                    stmt.execute("ALTER TABLE journal_entries ADD COLUMN title TEXT DEFAULT '';");
+                } 
+                catch (SQLException ex) 
+                {
+                    // If ALTER fails for any reason, print stack trace but continue.
+                    ex.printStackTrace();
+                }
+            }
+
             if (!isUsingTestConnection()) {
                 stmt.close();
                 conn.close();
@@ -110,5 +125,32 @@ public class Database {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Helper: returns true if the given column exists in the given table.
+     * Uses SQLite PRAGMA table_info which works across SQLite versions.
+     */
+    private static boolean columnExists(Connection conn, String tableName, String columnName) 
+    {
+        String pragma = "PRAGMA table_info('" + tableName + "');";
+        try (Statement s = conn.createStatement();
+             ResultSet rs = s.executeQuery(pragma)) 
+        {
+            while (rs.next()) 
+            {
+                String col = rs.getString("name");
+                if (columnName.equalsIgnoreCase(col)) 
+                {
+                    return true;
+                }
+            }
+        } 
+        catch (SQLException e) 
+        {
+            // If anything goes wrong, return false so caller can attempt migration.
+            e.printStackTrace();
+        }
+        return false;
     }
 }
