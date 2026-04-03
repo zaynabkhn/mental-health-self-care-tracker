@@ -5,7 +5,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,11 +35,11 @@ public class JournalEntryDAO
                 stmt.executeUpdate();
 
                 ResultSet keys = stmt.getGeneratedKeys();
-                if (keys.next()) {
+                if (keys.next()) 
+                {
                     entry.setId(keys.getLong(1));
                 }
             }
-
         } 
         catch (SQLException e) 
         {
@@ -113,7 +115,33 @@ public class JournalEntryDAO
         return entries;
     }
 
+    /**
+     * Keyword-only search (case-insensitive, wildcard-escaped).
+     * If keyword is null or empty, returns all entries for the user.
+     */
     public static List<JournalEntry> searchEntries(String username, String keyword) 
+    {
+        //Do an overload with no bounds.
+        return searchEntries(username, keyword, (LocalDateTime) null, (LocalDateTime) null);
+    }
+
+    /**
+     * Search by username, optional keyword, and optional LocalDate bounds.
+     * startDate and endDate are LocalDate (date-only) and will be converted to start/end of day.
+     * If startDate or endDate is null, that bound is ignored.
+     */
+    public static List<JournalEntry> searchEntries(String username, String keyword, LocalDate startDate, LocalDate endDate) 
+    {
+        LocalDateTime start = (startDate == null) ? null : startDate.atStartOfDay();
+        LocalDateTime end = (endDate == null) ? null : endDate.atTime(LocalTime.MAX);
+        return searchEntries(username, keyword, start, end);
+    }
+
+    /**
+     * Search by username, optional keyword, and optional LocalDateTime bounds (inclusive).
+     * Any null parameter is treated as "no bound" or "no keyword".
+     */
+    public static List<JournalEntry> searchEntries(String username, String keyword, LocalDateTime start, LocalDateTime end) 
     {
         List<JournalEntry> entries = new ArrayList<>();
 
@@ -122,50 +150,64 @@ public class JournalEntryDAO
             return entries;
         }
 
-        //Normalize keyword: treat null as empty and trim any whitespace.
+        // Normalize keyword: treat null as empty and trim whitespace
         String raw = (keyword == null) ? "" : keyword.trim();
-        boolean matchAll = raw.isEmpty();
+        boolean hasKeyword = !raw.isEmpty();
+        boolean hasStart = start != null;
+        boolean hasEnd = end != null;
 
-        String sql;
-        if (matchAll) 
+        // Build SQL dynamically based on which filters are present
+        StringBuilder sql = new StringBuilder("""
+            SELECT id, username, content, timestamp
+            FROM journal_entries
+            WHERE username = ?
+            """);
+
+        if (hasKeyword) 
         {
-            sql = """
-                SELECT id, username, content, timestamp
-                FROM journal_entries
-                WHERE username = ?
-                ORDER BY timestamp DESC
-            """;
-        } 
-        else 
-        {
-            //Uses case-insensitive search and escape wildcards.
-            sql = """
-                SELECT id, username, content, timestamp
-                FROM journal_entries
-                WHERE username = ?
-                AND LOWER(content) LIKE ? ESCAPE '\\'
-                ORDER BY timestamp DESC
-            """;
+            sql.append("\n  AND LOWER(content) LIKE ? ESCAPE '\\'");
         }
+
+        if (hasStart) 
+        {
+            sql.append("\n  AND timestamp >= ?");
+        }
+
+        if (hasEnd) 
+        {
+            sql.append("\n  AND timestamp <= ?");
+        }
+        sql.append("\n  ORDER BY timestamp DESC");
 
         Connection conn = null;
         try 
         {
             conn = Database.getConnection();
 
-            try (PreparedStatement stmt = conn.prepareStatement(sql)) 
+            try (PreparedStatement stmt = conn.prepareStatement(sql.toString())) 
             {
-                stmt.setString(1, username);
+                int idx = 1;
+                stmt.setString(idx++, username);
 
-                if (!matchAll) 
+                if (hasKeyword) 
                 {
-                    // Escape backslash first, then % and _
+                    //Escape backslash first, then % and _
                     String escaped = raw
                             .replace("\\", "\\\\")
                             .replace("%", "\\%")
                             .replace("_", "\\_");
                     String pattern = "%" + escaped.toLowerCase() + "%";
-                    stmt.setString(2, pattern);
+                    stmt.setString(idx++, pattern);
+                }
+
+                if (hasStart) 
+                {
+                    stmt.setString(idx++, start.format(JournalEntry.DB_FORMAT));
+                }
+
+                if (hasEnd) 
+                {
+                    stmt.setString(idx++, end.format(JournalEntry.DB_FORMAT));
                 }
 
                 try (ResultSet rs = stmt.executeQuery()) 
