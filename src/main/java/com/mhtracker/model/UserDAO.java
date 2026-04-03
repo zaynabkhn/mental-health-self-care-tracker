@@ -5,37 +5,91 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+public class UserDAO {
 
-/* A Data Access Object (DAO) is spoecifically for "talking" to the SQLite database.
-* The User.java model shows what User objects contain, but UserDAO handles more complex
-* tasks. 
-*/
-public class UserDAO 
-{
-
-    public static boolean authenticate(String username, String password) 
-    {
-
+    public static boolean authenticate(String username, String password) {
         String sql = "SELECT * FROM users WHERE username = ? AND password = ?";
 
-        try (Connection conn = Database.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) 
-        {
+        Connection conn = null;
+        try {
+            conn = Database.getConnection();
 
-            stmt.setString(1, username);
-            stmt.setString(2, password);
+            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+                stmt.setString(1, username);
+                stmt.setString(2, password);
 
-            ResultSet rs = stmt.executeQuery();
+                ResultSet rs = stmt.executeQuery();
+                return rs.next();
+            }
 
-            return rs.next(); // true if a matching user exists
-
-        } 
-        catch (SQLException e) 
-        {
+        } catch (SQLException e) {
             e.printStackTrace();
             return false;
+        } finally {
+            try {
+                if (conn != null && !Database.isUsingTestConnection()) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 
-    //ADD createUser() HERE LATER!
+    public static boolean usernameExists(String username) {
+        String sql = "SELECT 1 FROM users WHERE username = ?";
+
+        Connection conn = null;
+        try {
+            conn = Database.getConnection();
+
+            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+                stmt.setString(1, username);
+
+                ResultSet rs = stmt.executeQuery();
+                return rs.next();
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            try {
+                if (conn != null && !Database.isUsingTestConnection()) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public static boolean createUser(String username, String password) {
+        String sql = "INSERT INTO users (username, password) VALUES (?, ?)";
+
+        Connection conn = null;
+        try {
+            conn = Database.getConnection();
+
+            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+                stmt.setString(1, username);
+                stmt.setString(2, password);
+
+                int rowsInserted = stmt.executeUpdate();
+                return rowsInserted > 0;
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            try {
+                if (conn != null && !Database.isUsingTestConnection()) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 }

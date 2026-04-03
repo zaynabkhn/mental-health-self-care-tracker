@@ -25,13 +25,15 @@ public class LoginController {
 
     @FXML
     private void handleLogin() {
-
-        String username = usernameField.getText();
+        String username = usernameField.getText().trim();
         String password = passwordField.getText();
 
-        if (UserDAO.authenticate(username, password)) 
-        {
-            //Grab username value
+        if (username.isEmpty() || password.isEmpty()) {
+            messageLabel.setText("Please enter username and password");
+            return;
+        }
+
+        if (UserDAO.authenticate(username, password)) {
             Session.setLoggedInUsername(username);
 
             try {
@@ -57,11 +59,31 @@ public class LoginController {
                 e.printStackTrace();
             }
 
-        } 
-        else 
-        {
+        } else {
             messageLabel.setText("Invalid username or password");
             passwordField.clear();
+        }
+    }
+
+    @FXML
+    private void openSignup() {
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/com/mhtracker/view/SignupView.fxml"));
+
+            Parent root = loader.load();
+
+            Stage stage = (Stage) usernameField.getScene().getWindow();
+            Scene scene = new Scene(root, 900, 600);
+            scene.getStylesheets().add(
+                    getClass().getResource("/com/mhtracker/view/AppStyles.css").toExternalForm()
+            );
+
+            stage.setTitle("Mental Health Tracker - Sign Up");
+            stage.setScene(scene);
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }
