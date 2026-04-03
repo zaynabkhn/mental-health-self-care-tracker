@@ -39,6 +39,12 @@ public class JournalController
     @FXML
     private TableColumn<JournalEntry, String> contentColumn;
 
+    @FXML
+    private TextField titleField;
+
+    @FXML
+    private TableColumn<JournalEntry, String> titleColumn;
+
     // Search UI controls
     @FXML
     private TextField searchField;
@@ -67,12 +73,15 @@ public class JournalController
                 new SimpleStringProperty(data.getValue().getTimestampString()));
         contentColumn.setCellValueFactory(data ->
                 new SimpleStringProperty(data.getValue().getContent()));
+        titleColumn.setCellValueFactory(data ->
+        new SimpleStringProperty(data.getValue().getTitle()));
 
         refreshJournalEntries();
     }
 
     @FXML
     private void handleSaveEntry() {
+        String title = (titleField == null) ? "" : titleField.getText().trim();
         String content = journalTextArea.getText().trim();
 
         if (content.isEmpty()) {
@@ -84,10 +93,11 @@ public class JournalController
             return;
         }
 
-        JournalEntry entry = new JournalEntry(Session.getLoggedInUsername(), content);
+        JournalEntry entry = new JournalEntry(Session.getLoggedInUsername(), title, content);
         JournalEntryDAO.insertEntry(entry);
 
-        journalTextArea.clear();
+        if(titleField != null) titleField.clear();
+        if(journalTextArea != null) journalTextArea.clear();
         refreshJournalEntries();
 
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -165,6 +175,7 @@ public class JournalController
     private void handleClearSearch() 
     {
         if (searchField != null) searchField.clear();
+        if (titleField != null) titleField.clear();
         if (startDatePicker != null) startDatePicker.setValue(null);
         if (endDatePicker != null) endDatePicker.setValue(null);
         if (startTimeField != null) startTimeField.clear();

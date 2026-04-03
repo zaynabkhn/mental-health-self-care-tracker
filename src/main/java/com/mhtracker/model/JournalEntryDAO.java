@@ -175,7 +175,7 @@ public class JournalEntryDAO
 
                 if (hasKeyword) 
                 {
-                    // Escape backslash first, then % and _
+                    //Escape backslash first, then % and _
                     String escaped = raw
                             .replace("\\", "\\\\")
                             .replace("%", "\\%")
