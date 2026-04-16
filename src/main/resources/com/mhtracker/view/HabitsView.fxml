@@ -59,6 +59,10 @@
 
     <ListView fx:id="habitsListView" prefHeight="220.0"/>
 
+    <Label fx:id="streakLabel"
+           text="🔥 Current Streak: 0 days"
+           style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #1f2d3d;"/>
+
     <TitledPane fx:id="habitPane"
                 text="Add / Edit Habit"
                 expanded="false">
@@ -106,8 +110,8 @@
 
             <Label text="Weekly Goal (optional)"/>
             <TextField fx:id="weeklyGoalField"
-                        promptText="e.g., 3"
-                        prefHeight="36"/>
+                       promptText="e.g., 3"
+                       prefHeight="36"/>
 
             <HBox spacing="12" alignment="CENTER_LEFT">
                 <Button text="Save"

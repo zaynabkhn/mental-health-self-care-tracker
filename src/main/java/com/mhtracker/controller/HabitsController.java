@@ -1,10 +1,10 @@
 package com.mhtracker.controller;
 
 import com.mhtracker.model.Habit;
-import com.mhtracker.model.HabitType;
 import com.mhtracker.model.HabitDAO;
 import com.mhtracker.model.HabitLog;
 import com.mhtracker.model.HabitLogDAO;
+import com.mhtracker.model.HabitType;
 import com.mhtracker.model.Session;
 
 import javafx.collections.FXCollections;
@@ -13,7 +13,16 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
+import javafx.scene.control.TitledPane;
 import javafx.stage.Stage;
 
 public class HabitsController {
@@ -35,6 +44,9 @@ public class HabitsController {
 
     @FXML
     private TitledPane habitPane;
+
+    @FXML
+    private Label streakLabel;
 
     private ObservableList<Habit> habits = FXCollections.observableArrayList();
     private Habit selectedHabit = null;
@@ -75,6 +87,14 @@ public class HabitsController {
 
             if (newVal != null) {
                 fillFormForEdit(newVal);
+
+                int streak = HabitLogDAO.getStreak(
+                        newVal.getId(),
+                        Session.getLoggedInUsername()
+                );
+                streakLabel.setText("🔥 Current Streak: " + streak + " days");
+            } else {
+                streakLabel.setText("🔥 Current Streak: 0 days");
             }
         });
 
@@ -82,6 +102,7 @@ public class HabitsController {
 
         editButton.setDisable(true);
         deleteButton.setDisable(true);
+        streakLabel.setText("🔥 Current Streak: 0 days");
     }
 
     @FXML
@@ -91,6 +112,7 @@ public class HabitsController {
         clearForm();
         editButton.setDisable(true);
         deleteButton.setDisable(true);
+        streakLabel.setText("🔥 Current Streak: 0 days");
 
         habitPane.setExpanded(true);
     }
@@ -162,19 +184,18 @@ public class HabitsController {
         clearForm();
         editButton.setDisable(true);
         deleteButton.setDisable(true);
+        streakLabel.setText("🔥 Current Streak: 0 days");
     }
 
     @FXML
     private void handleDeleteHabit() {
         if (selectedHabit != null) {
-
             Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
             confirm.setTitle("Delete Habit");
             confirm.setHeaderText("Delete selected habit?");
             confirm.setContentText(selectedHabit.getName());
 
             if (confirm.showAndWait().get() == ButtonType.OK) {
-
                 HabitDAO.deleteHabit(selectedHabit.getId());
                 refreshHabits();
 
@@ -184,6 +205,7 @@ public class HabitsController {
 
                 editButton.setDisable(true);
                 deleteButton.setDisable(true);
+                streakLabel.setText("🔥 Current Streak: 0 days");
             }
         }
     }
@@ -195,6 +217,7 @@ public class HabitsController {
         clearForm();
         editButton.setDisable(true);
         deleteButton.setDisable(true);
+        streakLabel.setText("🔥 Current Streak: 0 days");
     }
 
     @FXML
@@ -241,10 +264,15 @@ public class HabitsController {
 
         HabitLogDAO.insertLog(log);
 
+        int streak = getSelectedHabitStreak();
+        streakLabel.setText("🔥 Current Streak: " + streak + " days");
+
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Success");
         alert.setHeaderText(null);
-        alert.setContentText("Habit marked as completed for today!");
+        alert.setContentText(
+                "Habit marked as completed!\n🔥 Current Streak: " + streak + " days"
+        );
         alert.showAndWait();
     }
 
@@ -272,7 +300,8 @@ public class HabitsController {
     }
 
     private void showAlert(String title, String message) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
+        Alert.AlertType type = title.equals("Error") ? Alert.AlertType.ERROR : Alert.AlertType.INFORMATION;
+        Alert alert = new Alert(type);
         alert.setTitle(title);
         alert.setHeaderText(null);
         alert.setContentText(message);
@@ -289,5 +318,14 @@ public class HabitsController {
             case BOOLEAN -> "Yes/No";
             case NUMERIC -> "Countable";
         };
+    }
+
+    private int getSelectedHabitStreak() {
+        if (selectedHabit == null) return 0;
+
+        return HabitLogDAO.getStreak(
+                selectedHabit.getId(),
+                Session.getLoggedInUsername()
+        );
     }
 }

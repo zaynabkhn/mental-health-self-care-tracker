@@ -4,6 +4,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 public class HabitLogDAO {
 
@@ -70,5 +73,54 @@ public class HabitLogDAO {
                 e.printStackTrace();
             }
         }
+    }
+
+    // 🚀 NEW METHOD — STREAK CALCULATION
+    public static int getStreak(long habitId, String username) {
+        String sql = """
+            SELECT log_date FROM habit_logs
+            WHERE habit_id = ? AND username = ?
+        """;
+
+        Set<LocalDate> dates = new HashSet<>();
+
+        Connection conn = null;
+        try {
+            conn = Database.getConnection();
+
+            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+                stmt.setLong(1, habitId);
+                stmt.setString(2, username);
+
+                ResultSet rs = stmt.executeQuery();
+
+                while (rs.next()) {
+                    dates.add(LocalDate.parse(rs.getString("log_date")));
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return 0;
+        } finally {
+            try {
+                if (conn != null && !Database.isUsingTestConnection()) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        // 🔥 STREAK LOGIC
+        int streak = 0;
+        LocalDate current = LocalDate.now();
+
+        while (dates.contains(current)) {
+            streak++;
+            current = current.minusDays(1);
+        }
+
+        return streak;
     }
 }
