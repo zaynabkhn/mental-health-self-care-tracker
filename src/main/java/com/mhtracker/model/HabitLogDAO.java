@@ -42,6 +42,39 @@ public class HabitLogDAO {
         }
     }
 
+    public static boolean hasAnyHabitLoggedToday(String username) {
+        String sql = """
+            SELECT COUNT(*) FROM habit_logs
+            WHERE username = ?
+            AND completed = 1
+            AND log_date = date('now', 'localtime')
+        """;
+
+        Connection conn = null;
+        try {
+            conn = Database.getConnection();
+
+            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+                stmt.setString(1, username);
+
+                ResultSet rs = stmt.executeQuery();
+                return rs.getInt(1) > 0;
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            try {
+                if (conn != null && !Database.isUsingTestConnection()) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     public static void insertLog(HabitLog log) {
         String sql = """
             INSERT INTO habit_logs (habit_id, username, log_date, value, completed)

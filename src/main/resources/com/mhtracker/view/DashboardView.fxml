@@ -7,110 +7,158 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox spacing="25" alignment="CENTER"
-      xmlns:fx="http://javafx.com/fxml"
-      fx:controller="com.mhtracker.controller.DashboardController"
-      styleClass="app-root"
-      stylesheets="@AppStyles.css">
+<ScrollPane fitToWidth="true"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.mhtracker.controller.DashboardController"
+            stylesheets="@AppStyles.css">
 
-    <padding>
-        <Insets top="30" right="40" bottom="30" left="40"/>
-    </padding>
+    <content>
+        <VBox spacing="15" alignment="CENTER" styleClass="app-root">
 
-    <Label text="Mental Health Self-Care Tracker"
-           styleClass="app-title"/>
+            <padding>
+                <Insets top="25" right="40" bottom="25" left="40"/>
+            </padding>
 
-    <Label text="Welcome to your dashboard!"
-           styleClass="app-subtitle"/>
+            <Label text="Mental Health Self-Care Tracker"
+                   styleClass="app-title"/>
 
-    <HBox spacing="20" alignment="CENTER">
-        <VBox spacing="10" alignment="CENTER"
-              style="-fx-background-color: white;
-                     -fx-padding: 20;
-                     -fx-pref-width: 250;
-                     -fx-background-radius: 10;
-                     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10,0,0,4);">
+            <Label text="Welcome to your dashboard!"
+                   styleClass="app-subtitle"/>
 
-            <Label text="Average Mood (7 Days)"
-                   style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
+            <!-- Story 11 weekly summary -->
+            <HBox spacing="20" alignment="CENTER">
+                <VBox spacing="10" alignment="CENTER"
+                      style="-fx-background-color: white;
+                             -fx-padding: 20;
+                             -fx-pref-width: 250;
+                             -fx-background-radius: 10;
+                             -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10,0,0,4);">
 
-            <Label fx:id="avgMoodLabel"
-                   text="--"
-                   style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #4A90E2;"/>
+                    <Label text="Average Mood (7 Days)"
+                           style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
+
+                    <Label fx:id="avgMoodLabel"
+                           text="--"
+                           style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #4A90E2;"/>
+                </VBox>
+
+                <VBox spacing="10" alignment="CENTER"
+                      style="-fx-background-color: white;
+                             -fx-padding: 20;
+                             -fx-pref-width: 250;
+                             -fx-background-radius: 10;
+                             -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10,0,0,4);">
+
+                    <Label text="Habits Completed (7 Days)"
+                           style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
+
+                    <Label fx:id="habitCompletionLabel"
+                           text="--"
+                           style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #7CB342;"/>
+                </VBox>
+            </HBox>
+
+            <Label fx:id="weeklySummaryLabel"
+                   style="-fx-font-size: 16px; -fx-text-fill: #555;"/>
+
+            <BarChart fx:id="moodChart"
+                      title="Mood Over the Last 7 Days"
+                      prefWidth="600"
+                      prefHeight="220">
+                <xAxis>
+                    <CategoryAxis label="Date"/>
+                </xAxis>
+                <yAxis>
+                    <NumberAxis fx:id="moodYAxis"/>
+                </yAxis>
+            </BarChart>
+
+            <!-- Story 10 dashboard overview -->
+            <HBox spacing="20" alignment="CENTER">
+                <VBox spacing="10" alignment="CENTER"
+                      style="-fx-background-color: white;
+                             -fx-padding: 18;
+                             -fx-pref-width: 220;
+                             -fx-background-radius: 10;
+                             -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10,0,0,4);">
+
+                    <Label text="Total Mood Entries"
+                           style="-fx-font-size: 15px; -fx-font-weight: bold;"/>
+
+                    <Label fx:id="totalMoodEntriesLabel"
+                           text="--"
+                           style="-fx-font-size: 24px; -fx-font-weight: bold;"/>
+                </VBox>
+
+                <VBox spacing="10" alignment="CENTER"
+                      style="-fx-background-color: white;
+                             -fx-padding: 18;
+                             -fx-pref-width: 220;
+                             -fx-background-radius: 10;
+                             -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10,0,0,4);">
+
+                    <Label text="Most Frequent Mood"
+                           style="-fx-font-size: 15px; -fx-font-weight: bold;"/>
+
+                    <Label fx:id="mostFrequentMoodLabel"
+                           text="--"
+                           style="-fx-font-size: 24px; -fx-font-weight: bold;"/>
+                </VBox>
+            </HBox>
+
+            <VBox spacing="8" alignment="CENTER"
+                  style="-fx-background-color: white;
+                         -fx-padding: 18;
+                         -fx-background-radius: 10;
+                         -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10,0,0,4);">
+                <Label text="Recent Mood Entries"
+                       style="-fx-font-size: 15px; -fx-font-weight: bold;"/>
+                <ListView fx:id="recentMoodList" prefWidth="520" prefHeight="70"/>
+            </VBox>
+
+            <VBox spacing="15" alignment="CENTER"
+                  style="-fx-background-color: white;
+                         -fx-padding: 25;
+                         -fx-background-radius: 10;
+                         -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10,0,0,4);">
+
+                <Button fx:id="profileButton"
+                        text="Open Profile"
+                        onAction="#openProfile"
+                        prefWidth="220"
+                        prefHeight="42"
+                        styleClass="primary-button"/>
+
+                <Button fx:id="habitsButton"
+                        text="Open Habits"
+                        onAction="#openHabits"
+                        prefWidth="220"
+                        prefHeight="42"
+                        styleClass="primary-button"/>
+
+                <Button fx:id="moodTrackerButton"
+                        text="Open Mood Tracker"
+                        onAction="#handleOpenMoodTracker"
+                        prefWidth="220"
+                        prefHeight="42"
+                        styleClass="primary-button"/>
+
+                <Button text="Open Journal"
+                        onAction="#openJournal"
+                        prefWidth="220"
+                        prefHeight="42"
+                        styleClass="primary-button"/>
+
+                <Region prefHeight="5"/>
+
+                <Button fx:id="logoutButton"
+                        text="Logout"
+                        onAction="#logout"
+                        prefWidth="220"
+                        prefHeight="42"
+                        styleClass="danger-button"/>
+            </VBox>
+
         </VBox>
-
-        <VBox spacing="10" alignment="CENTER"
-              style="-fx-background-color: white;
-                     -fx-padding: 20;
-                     -fx-pref-width: 250;
-                     -fx-background-radius: 10;
-                     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10,0,0,4);">
-
-            <Label text="Habits Completed (7 Days)"
-                   style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
-
-            <Label fx:id="habitCompletionLabel"
-                   text="--"
-                   style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #7CB342;"/>
-        </VBox>
-    </HBox>
-
-    <Label fx:id="weeklySummaryLabel"
-           style="-fx-font-size: 16px; -fx-text-fill: #555;"/>
-
-    <BarChart fx:id="moodChart"
-              title="Mood Over the Last 7 Days"
-              prefWidth="600"
-              prefHeight="300">
-        <xAxis>
-            <CategoryAxis label="Date"/>
-        </xAxis>
-        <yAxis>
-            <NumberAxis fx:id="moodYAxis"/>
-        </yAxis>
-    </BarChart>
-
-    <VBox spacing="15" alignment="CENTER"
-          style="-fx-background-color: white;
-                 -fx-padding: 30;
-                 -fx-background-radius: 10;
-                 -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10,0,0,4);">
-
-        <Button fx:id="profileButton"
-                text="Open Profile"
-                onAction="#openProfile"
-                prefWidth="220"
-                prefHeight="42"
-                styleClass="primary-button"/>
-
-        <Button fx:id="habitsButton"
-                text="Open Habits"
-                onAction="#openHabits"
-                prefWidth="220"
-                prefHeight="42"
-                styleClass="primary-button"/>
-
-        <Button fx:id="moodTrackerButton"
-                text="Open Mood Tracker"
-                onAction="#handleOpenMoodTracker"
-                prefWidth="220"
-                prefHeight="42"
-                styleClass="primary-button"/>
-
-        <Button text="Open Journal"
-                onAction="#openJournal"
-                prefWidth="220"
-                prefHeight="42"
-                styleClass="primary-button"/>
-
-        <Region prefHeight="10"/>
-
-        <Button fx:id="logoutButton"
-                text="Logout"
-                onAction="#logout"
-                prefWidth="220"
-                prefHeight="42"
-                styleClass="danger-button"/>
-    </VBox>
-
-</VBox>
+    </content>
+</ScrollPane>

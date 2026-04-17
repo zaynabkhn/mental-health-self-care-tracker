@@ -54,24 +54,30 @@ public class ProfileController {
     }
 
     @FXML
-        private void goBackToDashboard() {
+    private void goBackToDashboard() {
         try {
-        FXMLLoader loader = new FXMLLoader(
-                getClass().getResource("/com/mhtracker/view/DashboardView.fxml"));
-        Parent root = loader.load();
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/com/mhtracker/view/DashboardView.fxml"));
+            Parent root = loader.load();
 
-        Stage stage = (Stage) displayNameField.getScene().getWindow();
+            Stage stage = (Stage) displayNameField.getScene().getWindow();
+            boolean wasMaximized = stage.isMaximized();
+            double width = stage.getWidth();
+            double height = stage.getHeight();
 
-        Scene scene = new Scene(root, 900, 600);
-        scene.getStylesheets().add(
-                getClass().getResource("/com/mhtracker/view/AppStyles.css").toExternalForm()
-        );
+            Scene scene = new Scene(root, width, height);
+            scene.getStylesheets().add(
+                    getClass().getResource("/com/mhtracker/view/AppStyles.css").toExternalForm()
+            );
 
-        stage.setTitle("Mental Health Tracker - Dashboard");
-        stage.setScene(scene);
+            stage.setTitle("Mental Health Tracker - Dashboard");
+            stage.setScene(scene);
+            stage.setWidth(width);
+            stage.setHeight(height);
+            stage.setMaximized(wasMaximized);
 
         } catch (Exception e) {
-        e.printStackTrace();
+            e.printStackTrace();
         }
     }
 }

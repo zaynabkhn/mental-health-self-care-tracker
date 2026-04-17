@@ -18,14 +18,11 @@ public class MoodEntryDAO {
             Connection conn = Database.getConnection();
 
             try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-
                 stmt.setString(1, entry.getUsername());
                 stmt.setString(2, entry.getMood());
                 stmt.setString(3, entry.getNote());
                 stmt.setString(4, entry.getTimestamp().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
-
                 stmt.executeUpdate();
-
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -34,15 +31,12 @@ public class MoodEntryDAO {
 
     public static List<MoodEntry> getEntriesForUser(String username) {
         List<MoodEntry> entries = new ArrayList<>();
-
         String sql = "SELECT mood, note, timestamp FROM mood_entries WHERE username = ? ORDER BY timestamp DESC";
 
         try {
             Connection conn = Database.getConnection();
             try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-
                 stmt.setString(1, username);
-
                 ResultSet rs = stmt.executeQuery();
 
                 while (rs.next()) {
@@ -51,13 +45,11 @@ public class MoodEntryDAO {
                     String ts = rs.getString("timestamp").trim();
 
                     LocalDateTime parsed = LocalDateTime.parse(ts, MoodEntry.DB_FORMAT);
-
                     MoodEntry entry = new MoodEntry(mood, note, parsed);
                     entry.setUsername(username);
 
                     entries.add(entry);
                 }
-
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -76,12 +68,9 @@ public class MoodEntryDAO {
         try {
             Connection conn = Database.getConnection();
             try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-
                 stmt.setString(1, username);
-
                 ResultSet rs = stmt.executeQuery();
                 return rs.getInt(1) > 0;
-
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -103,7 +92,6 @@ public class MoodEntryDAO {
         try {
             Connection conn = Database.getConnection();
             try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-
                 stmt.setString(1, username);
                 ResultSet rs = stmt.executeQuery();
 
@@ -174,7 +162,6 @@ public class MoodEntryDAO {
         }
 
         int total = 0;
-
         for (MoodEntry entry : entries) {
             total += moodToScore(entry.getMood());
         }
@@ -183,15 +170,100 @@ public class MoodEntryDAO {
         return scoreToMood(avg);
     }
 
+    public static int getMoodEntryCount(String username) {
+        String sql = """
+            SELECT COUNT(*)
+            FROM mood_entries
+            WHERE username = ?
+        """;
+
+        try {
+            Connection conn = Database.getConnection();
+            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+                stmt.setString(1, username);
+                ResultSet rs = stmt.executeQuery();
+
+                if (rs.next()) {
+                    return rs.getInt(1);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return 0;
+    }
+
+    public static String getMostFrequentMood(String username) {
+        String sql = """
+            SELECT mood, COUNT(*) AS count
+            FROM mood_entries
+            WHERE username = ? AND mood IS NOT NULL AND TRIM(mood) <> ''
+            GROUP BY mood
+            ORDER BY count DESC
+            LIMIT 1
+        """;
+
+        try {
+            Connection conn = Database.getConnection();
+            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+                stmt.setString(1, username);
+                ResultSet rs = stmt.executeQuery();
+
+                if (rs.next()) {
+                    return rs.getString("mood");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return "No Data";
+    }
+
+    public static List<MoodEntry> getRecentMoodEntries(String username) {
+        List<MoodEntry> entries = new ArrayList<>();
+
+        String sql = """
+            SELECT mood, note, timestamp
+            FROM mood_entries
+            WHERE username = ?
+            ORDER BY timestamp DESC
+            LIMIT 5
+        """;
+
+        try {
+            Connection conn = Database.getConnection();
+            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+                stmt.setString(1, username);
+                ResultSet rs = stmt.executeQuery();
+
+                while (rs.next()) {
+                    String mood = rs.getString("mood");
+                    String note = rs.getString("note");
+                    String ts = rs.getString("timestamp").trim();
+
+                    LocalDateTime parsed = LocalDateTime.parse(ts, MoodEntry.DB_FORMAT);
+                    MoodEntry entry = new MoodEntry(mood, note, parsed);
+                    entry.setUsername(username);
+
+                    entries.add(entry);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return entries;
+    }
+
     public static void clearAll() {
         String sql = "DELETE FROM mood_entries";
 
         try {
             Connection conn = Database.getConnection();
             try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-
                 stmt.executeUpdate();
-
             }
         } catch (SQLException e) {
             e.printStackTrace();

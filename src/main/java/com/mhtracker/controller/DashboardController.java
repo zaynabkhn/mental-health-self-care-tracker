@@ -2,12 +2,16 @@ package com.mhtracker.controller;
 
 import java.util.List;
 
+import com.mhtracker.model.DashboardSummary;
 import com.mhtracker.model.HabitLogDAO;
 import com.mhtracker.model.MoodEntry;
 import com.mhtracker.model.MoodEntryDAO;
 import com.mhtracker.model.Session;
+import com.mhtracker.service.DashboardService;
+import com.mhtracker.service.ReminderService;
 
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -17,8 +21,10 @@ import javafx.scene.Scene;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.stage.Stage;
 
 public class DashboardController {
@@ -45,16 +51,29 @@ public class DashboardController {
     private Label weeklySummaryLabel;
 
     @FXML
+    private Label totalMoodEntriesLabel;
+
+    @FXML
+    private Label mostFrequentMoodLabel;
+
+    @FXML
+    private ListView<String> recentMoodList;
+
+    @FXML
     private BarChart<String, Number> moodChart;
 
     @FXML
     private NumberAxis moodYAxis;
+
+    private final DashboardService dashboardService = new DashboardService();
+    private final ReminderService reminderService = new ReminderService();
 
     @FXML
     public void initialize() {
         if (avgMoodLabel != null && habitCompletionLabel != null && weeklySummaryLabel != null
                 && moodChart != null && moodYAxis != null) {
             loadWeeklySummary();
+            loadDashboardOverview();
 
             moodYAxis.setAutoRanging(false);
             moodYAxis.setLowerBound(1);
@@ -72,6 +91,22 @@ public class DashboardController {
             });
 
             loadMoodChart();
+            showReminderIfNeeded();
+        }
+    }
+
+    private void showReminderIfNeeded() {
+        String username = Session.getLoggedInUsername();
+        String reminderMessage = reminderService.buildReminderMessage(username);
+
+        if (!reminderMessage.isBlank()) {
+            Platform.runLater(() -> {
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Daily Reminder");
+                alert.setHeaderText("Self-Care Reminder");
+                alert.setContentText(reminderMessage);
+                alert.showAndWait();
+            });
         }
     }
 
@@ -93,6 +128,20 @@ public class DashboardController {
                 "In the past 7 days, your average mood was " + avgMoodLabelText +
                 " and you completed " + habitCount + " habits."
         );
+    }
+
+    private void loadDashboardOverview() {
+        String username = Session.getLoggedInUsername();
+        DashboardSummary summary = dashboardService.getDashboardSummary(username);
+
+        totalMoodEntriesLabel.setText(String.valueOf(summary.getTotalMoodEntries()));
+        mostFrequentMoodLabel.setText(summary.getMostFrequentMood());
+
+        List<String> recentItems = summary.getRecentMoodEntries().stream()
+                .map(entry -> entry.getTimestampString() + " - " + entry.getMood())
+                .toList();
+
+        recentMoodList.setItems(FXCollections.observableArrayList(recentItems));
     }
 
     private void loadMoodChart() {
@@ -125,6 +174,23 @@ public class DashboardController {
         });
     }
 
+    private void switchScene(Stage stage, Parent root, String title) {
+        boolean wasMaximized = stage.isMaximized();
+        double width = stage.getWidth();
+        double height = stage.getHeight();
+
+        Scene scene = new Scene(root, width, height);
+        scene.getStylesheets().add(
+                getClass().getResource("/com/mhtracker/view/AppStyles.css").toExternalForm()
+        );
+
+        stage.setTitle(title);
+        stage.setScene(scene);
+        stage.setWidth(width);
+        stage.setHeight(height);
+        stage.setMaximized(wasMaximized);
+    }
+
     private static final String[] MOOD_LABELS = {
             "", "Angry", "Sad", "Anxious", "Stressed",
             "Tired", "Calm", "Excited", "Happy"
@@ -138,13 +204,7 @@ public class DashboardController {
             Parent root = loader.load();
 
             Stage stage = (Stage) profileButton.getScene().getWindow();
-            Scene scene = new Scene(root, 900, 600);
-            scene.getStylesheets().add(
-                    getClass().getResource("/com/mhtracker/view/AppStyles.css").toExternalForm()
-            );
-
-            stage.setTitle("Mental Health Tracker - Profile");
-            stage.setScene(scene);
+            switchScene(stage, root, "Mental Health Tracker - Profile");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -158,13 +218,7 @@ public class DashboardController {
             Parent root = loader.load();
 
             Stage stage = (Stage) habitsButton.getScene().getWindow();
-            Scene scene = new Scene(root, 900, 600);
-            scene.getStylesheets().add(
-                    getClass().getResource("/com/mhtracker/view/AppStyles.css").toExternalForm()
-            );
-
-            stage.setTitle("Mental Health Tracker - Habits");
-            stage.setScene(scene);
+            switchScene(stage, root, "Mental Health Tracker - Habits");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -178,13 +232,7 @@ public class DashboardController {
             Parent root = loader.load();
 
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            Scene scene = new Scene(root, 900, 600);
-            scene.getStylesheets().add(
-                    getClass().getResource("/com/mhtracker/view/AppStyles.css").toExternalForm()
-            );
-
-            stage.setTitle("Mental Health Tracker - Login");
-            stage.setScene(scene);
+            switchScene(stage, root, "Mental Health Tracker - Login");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -198,13 +246,7 @@ public class DashboardController {
             Parent root = loader.load();
 
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            Scene scene = new Scene(root, 900, 600);
-            scene.getStylesheets().add(
-                    getClass().getResource("/com/mhtracker/view/AppStyles.css").toExternalForm()
-            );
-
-            stage.setTitle("Mental Health Tracker - Mood Tracker");
-            stage.setScene(scene);
+            switchScene(stage, root, "Mental Health Tracker - Mood Tracker");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -218,13 +260,7 @@ public class DashboardController {
             Parent root = loader.load();
 
             Stage stage = (Stage) profileButton.getScene().getWindow();
-            Scene scene = new Scene(root, 900, 600);
-            scene.getStylesheets().add(
-                    getClass().getResource("/com/mhtracker/view/AppStyles.css").toExternalForm()
-            );
-
-            stage.setTitle("Mental Health Tracker - Journal");
-            stage.setScene(scene);
+            switchScene(stage, root, "Mental Health Tracker - Journal");
         } catch (Exception e) {
             e.printStackTrace();
         }
