@@ -28,38 +28,32 @@
             <!-- Story 11 weekly summary -->
             <HBox spacing="20" alignment="CENTER">
                 <VBox spacing="10" alignment="CENTER"
-                      style="-fx-background-color: white;
-                             -fx-padding: 20;
-                             -fx-pref-width: 250;
-                             -fx-background-radius: 10;
-                             -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10,0,0,4);">
+                      styleClass="card"
+                      prefWidth="250">
 
                     <Label text="Average Mood (7 Days)"
-                           style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
+                           styleClass="card-title"/>
 
                     <Label fx:id="avgMoodLabel"
                            text="--"
-                           style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #4A90E2;"/>
+                           styleClass="card-value"/>
                 </VBox>
 
                 <VBox spacing="10" alignment="CENTER"
-                      style="-fx-background-color: white;
-                             -fx-padding: 20;
-                             -fx-pref-width: 250;
-                             -fx-background-radius: 10;
-                             -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10,0,0,4);">
+                      styleClass="card"
+                      prefWidth="250">
 
                     <Label text="Habits Completed (7 Days)"
-                           style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
+                           styleClass="card-title"/>
 
                     <Label fx:id="habitCompletionLabel"
                            text="--"
-                           style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #7CB342;"/>
+                           styleClass="card-value"/>
                 </VBox>
             </HBox>
 
             <Label fx:id="weeklySummaryLabel"
-                   style="-fx-font-size: 16px; -fx-text-fill: #555;"/>
+                   style="-fx-font-size: 16px; -fx-text-fill: #5C6B7A;"/>
 
             <BarChart fx:id="moodChart"
                       title="Mood Over the Last 7 Days"
@@ -76,51 +70,41 @@
             <!-- Story 10 dashboard overview -->
             <HBox spacing="20" alignment="CENTER">
                 <VBox spacing="10" alignment="CENTER"
-                      style="-fx-background-color: white;
-                             -fx-padding: 18;
-                             -fx-pref-width: 220;
-                             -fx-background-radius: 10;
-                             -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10,0,0,4);">
+                      styleClass="card-small"
+                      prefWidth="220">
 
                     <Label text="Total Mood Entries"
-                           style="-fx-font-size: 15px; -fx-font-weight: bold;"/>
+                           styleClass="card-title"/>
 
                     <Label fx:id="totalMoodEntriesLabel"
                            text="--"
-                           style="-fx-font-size: 24px; -fx-font-weight: bold;"/>
+                           styleClass="card-value"/>
                 </VBox>
 
                 <VBox spacing="10" alignment="CENTER"
-                      style="-fx-background-color: white;
-                             -fx-padding: 18;
-                             -fx-pref-width: 220;
-                             -fx-background-radius: 10;
-                             -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10,0,0,4);">
+                      styleClass="card-small"
+                      prefWidth="220">
 
                     <Label text="Most Frequent Mood"
-                           style="-fx-font-size: 15px; -fx-font-weight: bold;"/>
+                           styleClass="card-title"/>
 
                     <Label fx:id="mostFrequentMoodLabel"
                            text="--"
-                           style="-fx-font-size: 24px; -fx-font-weight: bold;"/>
+                           styleClass="card-value"/>
                 </VBox>
             </HBox>
 
             <VBox spacing="8" alignment="CENTER"
-                  style="-fx-background-color: white;
-                         -fx-padding: 18;
-                         -fx-background-radius: 10;
-                         -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10,0,0,4);">
+                  styleClass="card"
+                  prefWidth="620">
                 <Label text="Recent Mood Entries"
-                       style="-fx-font-size: 15px; -fx-font-weight: bold;"/>
+                       styleClass="card-title"/>
                 <ListView fx:id="recentMoodList" prefWidth="520" prefHeight="70"/>
             </VBox>
 
             <VBox spacing="15" alignment="CENTER"
-                  style="-fx-background-color: white;
-                         -fx-padding: 25;
-                         -fx-background-radius: 10;
-                         -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10,0,0,4);">
+                  styleClass="card"
+                  prefWidth="620">
 
                 <Button fx:id="profileButton"
                         text="Open Profile"
