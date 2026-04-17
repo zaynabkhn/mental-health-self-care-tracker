@@ -75,7 +75,6 @@ public class HabitLogDAO {
         }
     }
 
-    // 🚀 NEW METHOD — STREAK CALCULATION
     public static int getStreak(long habitId, String username) {
         String sql = """
             SELECT log_date FROM habit_logs
@@ -112,7 +111,6 @@ public class HabitLogDAO {
             }
         }
 
-        // 🔥 STREAK LOGIC
         int streak = 0;
         LocalDate current = LocalDate.now();
 
@@ -122,5 +120,38 @@ public class HabitLogDAO {
         }
 
         return streak;
+    }
+
+    public static int getWeeklyCompletionCount(String username) {
+        String sql = """
+            SELECT COUNT(*) FROM habit_logs
+            WHERE username = ?
+            AND completed = 1
+            AND log_date >= date('now', '-7 days', 'localtime')
+        """;
+
+        Connection conn = null;
+        try {
+            conn = Database.getConnection();
+
+            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+                stmt.setString(1, username);
+
+                ResultSet rs = stmt.executeQuery();
+                return rs.getInt(1);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return 0;
+        } finally {
+            try {
+                if (conn != null && !Database.isUsingTestConnection()) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

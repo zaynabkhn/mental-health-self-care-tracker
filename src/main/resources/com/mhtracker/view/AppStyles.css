@@ -66,3 +66,35 @@
 .secondary-button:hover {
     -fx-background-color: #cfd8e3;
 }
+
+.chart-bar.mood-happy {
+    -fx-background-color: #4CAF50;
+}
+
+.chart-bar.mood-excited {
+    -fx-background-color: #FF9800;
+}
+
+.chart-bar.mood-calm {
+    -fx-background-color: #2196F3;
+}
+
+.chart-bar.mood-tired {
+    -fx-background-color: #9C27B0;
+}
+
+.chart-bar.mood-stressed {
+    -fx-background-color: #F44336;
+}
+
+.chart-bar.mood-anxious {
+    -fx-background-color: #E91E63;
+}
+
+.chart-bar.mood-sad {
+    -fx-background-color: #3F51B5;
+}
+
+.chart-bar.mood-angry {
+    -fx-background-color: #B71C1C;
+}
